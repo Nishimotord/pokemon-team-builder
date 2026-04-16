@@ -2,476 +2,613 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaf Green Professional Strategizer</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Leaf Green Strategizer</title>
     <style>
     :root {
         --bg: #f4f4f9; --card-bg: #ffffff; --text: #333; --border: #ddd;
         --pk-blue: #3b4cca; --pk-yellow: #ffde00; --pk-red: #cc0000;
+        --drawer-width: 340px;
     }
     body.dark-mode {
         --bg: #1a1a1a; --card-bg: #2d2d2d; --text: #f0f0f0; --border: #444;
     }
+    * { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 12px; transition: background 0.3s, color 0.3s; margin: 0; overflow-x: hidden; }
 
-    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; transition: 0.3s; margin: 0; }
+    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; }
+    .header-left { display: flex; gap: 8px; align-items: center; }
 
-    /* Layout & Containers */
-    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .team-container { background: var(--card-bg); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid var(--border); position: relative; }
-    .team-slots { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
+    /* Drawer overlay */
+    .drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; }
+    .drawer-overlay.open { display: block; }
+
+    /* Team drawer */
+    .team-drawer {
+        position: fixed; top: 0; right: -100%; width: min(var(--drawer-width), 100vw);
+        height: 100%; background: var(--card-bg); z-index: 201;
+        transition: right 0.35s cubic-bezier(.4,0,.2,1);
+        display: flex; flex-direction: column;
+        box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+    }
+    .team-drawer.open { right: 0; }
+    .drawer-header {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 14px 16px; border-bottom: 2px solid var(--border);
+        background: var(--pk-blue); color: white; flex-shrink: 0;
+    }
+    .drawer-header h2 { margin: 0; font-size: 1rem; }
+    .drawer-body { flex: 1; overflow-y: auto; padding: 12px; }
+    .drawer-footer { padding: 10px 12px; border-top: 2px solid var(--border); flex-shrink: 0; }
+
+    /* Team container in drawer */
+    .team-container { background: rgba(0,0,0,0.05); padding: 10px; border-radius: 12px; margin-bottom: 10px; border: 2px solid var(--border); }
+    .team-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .team-name-input { background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--text); font-weight: bold; font-size: 0.9rem; width: 160px; outline: none; padding: 2px 4px; }
+    .team-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
     .slot {
-        min-height: 280px; /* Adjust to match your createCardHTML height */
-        background: rgba(0,0,0,0.05);
-        border: 2px dashed var(--border);
-        border-radius: 10px;
-        display: block; /* Ensures children stack so we can count them */
+        min-height: 110px; background: rgba(0,0,0,0.05); border: 2px dashed var(--border);
+        border-radius: 8px; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; position: relative; overflow: hidden; transition: border-color 0.2s, background 0.2s;
     }
-    /* Sticky Controls */
-    .controls { 
-        background: var(--card-bg); padding: 20px; border-radius: 12px; margin-bottom: 20px; 
-        position: sticky; top: 10px; z-index: 100; border: 1px solid var(--border); 
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-    }
+    .slot:not(:has(.team-card))::after { content: '+'; font-size: 1.5rem; opacity: 0.25; pointer-events: none; }
+    .slot:not(:has(.team-card)):hover { border-color: var(--pk-blue); background: rgba(59,76,202,0.1); }
 
-    /* Common UI Elements */
-    .type-pill { padding: 4px 10px; border-radius: 20px; cursor: pointer; border: 2px solid transparent; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+    /* Mini card in team slots */
+    .team-card { width: 100%; padding: 5px; display: flex; flex-direction: column; align-items: center; position: relative; background: var(--card-bg); border-radius: 6px; }
+    .team-card img { width: 54px; height: 54px; image-rendering: pixelated; }
+    .team-card .tc-name { font-size: 0.62rem; font-weight: bold; text-align: center; text-transform: capitalize; margin-top: 2px; }
+    .team-card .tc-types { display: flex; gap: 2px; justify-content: center; flex-wrap: wrap; margin-top: 2px; }
+    .team-card .tc-type { font-size: 0.48rem; padding: 1px 4px; border-radius: 10px; color: white; font-weight: bold; text-transform: uppercase; text-shadow: 1px 1px 1px rgba(0,0,0,0.4); }
+    .remove-btn { position: absolute; top: 2px; right: 2px; background: var(--pk-red); color: white; border: none; border-radius: 50%; width: 15px; height: 15px; font-size: 0.65rem; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1; }
+
+    /* FAB */
+    .fab-team {
+        position: fixed; bottom: 20px; right: 20px; z-index: 150;
+        background: var(--pk-blue); color: var(--pk-yellow);
+        border: 3px solid var(--pk-yellow); border-radius: 50px;
+        padding: 10px 18px; font-weight: bold; font-size: 0.9rem;
+        cursor: pointer; box-shadow: 0 4px 15px rgba(59,76,202,0.5);
+        display: flex; align-items: center; gap: 8px;
+        -webkit-tap-highlight-color: transparent; user-select: none;
+        transition: transform 0.15s;
+    }
+    .fab-team:active { transform: scale(0.95); }
+    .fab-badge { background: var(--pk-red); color: white; border-radius: 10px; padding: 1px 6px; font-size: 0.7rem; }
+
+    /* Controls */
+    .controls {
+        background: var(--card-bg); padding: 12px; border-radius: 12px; margin-bottom: 12px;
+        position: sticky; top: 0; z-index: 100; border: 1px solid var(--border);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .filter-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+    .filter-row:last-child { margin-bottom: 0; }
+    .filter-row strong { font-size: 0.8rem; white-space: nowrap; }
+
+    .type-pill { padding: 4px 10px; border-radius: 20px; cursor: pointer; border: 2px solid transparent; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); -webkit-tap-highlight-color: transparent; user-select: none; }
     .type-pill.active { border-color: var(--pk-yellow); box-shadow: 0 0 8px var(--pk-yellow); }
-    .toggle-btn, .btn-sort { padding: 8px 15px; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); cursor: pointer; font-weight: bold; font-size: 0.8rem; }
-    .active { background: var(--pk-blue) !important; color: white !important; }
 
-    /* Card Components */
-    #main-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; max-height: 500px; overflow-y: auto; padding: 10px; }
-    .card { padding: 10px; display: flex; flex-direction: column; position: relative; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; }
-    .id-badge { display: block; text-align: center; font-size: 0.75rem; opacity: 0.6; font-family: monospace; }
-    .card img { width: 75px; height: 75px; image-rendering: pixelated; margin: 0 auto; }
-    .card-header { text-align: center; margin: 8px 0; }
-    .card-name { text-transform: capitalize; font-size: 0.9rem; font-weight: bold; }
+    .toggle-btn, .btn-sort, .btn-display { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); cursor: pointer; font-weight: bold; font-size: 0.75rem; -webkit-tap-highlight-color: transparent; user-select: none; white-space: nowrap; transition: 0.15s; }
+    .active { background: var(--pk-blue) !important; color: white !important; border-color: var(--pk-blue) !important; }
+    .btn-display.active { background: #27ae60 !important; border-color: #27ae60 !important; color: white !important; }
+    .btn-display.coming-soon { border-style: dashed; opacity: 0.55; cursor: default; }
+
+    /* Main list */
+    #main-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px; padding: 4px; padding-bottom: 80px; }
+
+    /* Pokemon card */
+    .card { padding: 10px; display: flex; flex-direction: column; position: relative; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transition: transform 0.12s; }
+    .card:active { transform: scale(0.97); }
+    .card.in-team { border-color: var(--pk-yellow); box-shadow: 0 0 0 2px var(--pk-yellow); }
+
+    .id-badge { display: block; text-align: center; font-size: 0.7rem; opacity: 0.55; font-family: monospace; }
+    .card img { width: 72px; height: 72px; image-rendering: pixelated; margin: 0 auto; display: block; }
+    .card-header { text-align: center; margin: 6px 0; }
+    .card-name { text-transform: capitalize; font-size: 0.88rem; font-weight: bold; }
     .type-box { display: flex; justify-content: center; gap: 4px; margin-top: 4px; }
 
-    /* Stats Visualization */
-    .stats-box { background: rgba(0,0,0,0.08); border-radius: 5px; padding: 8px; display: flex; flex-direction: column; gap: 4px; font-family: monospace; font-size: 0.7rem; }
-    .stat-row { display: flex; align-items: center; gap: 8px; border-radius: 2px; transition: 0.2s; }
-    .stat-label { width: 30px; font-weight: bold; }
+    /* Stats section */
+    .section-stats { }
+    .section-stats.hidden { display: none; }
+    .stats-box { background: rgba(0,0,0,0.08); border-radius: 5px; padding: 7px; display: flex; flex-direction: column; gap: 3px; font-family: monospace; font-size: 0.68rem; }
+    .stat-row { display: flex; align-items: center; gap: 6px; border-radius: 2px; }
+    .stat-label { width: 28px; font-weight: bold; }
     .stat-bar-bg { flex-grow: 1; height: 6px; background: rgba(0,0,0,0.1); border-radius: 3px; overflow: hidden; }
     .stat-bar-fill { height: 100%; border-radius: 3px; }
-
-    /* Color Tiers & Highlighting */
     .bar-low { background: #ff4d4d; }
     .bar-mid { background: #ffcc00; }
     .bar-high { background: #4caf50; }
-    .stat-row.max-stat { outline: 2px solid rgb(0, 0, 0); outline-offset: 1px; background: rgba(255, 255, 255, 0.1); }
-    body.dark-mode .stat-row.max-stat { outline-color: #fff; background: rgba(255, 255, 255, 0.15); }
-    
-    .sortable-swap-highlight {
-        background-color: rgba(255, 222, 0, 0.3) !important; /* Poke-Yellow tint */
-        border-radius: 10px;
+    .stat-row.max-stat { outline: 2px solid rgb(0,0,0); outline-offset: 1px; background: rgba(255,255,255,0.1); }
+    body.dark-mode .stat-row.max-stat { outline-color: #fff; background: rgba(255,255,255,0.15); }
+    .card-total { text-align: center; font-size: 0.75rem; font-weight: bold; margin-top: 6px; opacity: 0.85; }
+
+    /* Selecting mode banner */
+    .select-banner { display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 300; background: var(--pk-blue); color: white; text-align: center; padding: 10px; font-weight: bold; font-size: 0.9rem; }
+    .select-banner.show { display: block; }
+    .select-banner button { background: var(--pk-red); color: white; border: none; border-radius: 4px; padding: 4px 10px; margin-left: 10px; cursor: pointer; font-weight: bold; }
+
+    .delete-row-btn { background: none; border: none; color: var(--pk-red); font-size: 1rem; cursor: pointer; padding: 2px 6px; -webkit-tap-highlight-color: transparent; }
+
+    @media (max-width: 480px) {
+        #main-list { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+        body { padding: 8px; }
     }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
     </style>
 </head>
 <body class="dark-mode">
 
-<div class="header-row">
-    <div>
-        <button class="toggle-btn" style="background: var(--pk-blue); color: white;" onclick="addTeamRow()">+ Add Team Row</button>
-    </div>
-    <button class="toggle-btn" onclick="document.body.classList.toggle('dark-mode')">🌓 Toggle Theme</button>
+<!-- Selecting mode banner -->
+<div class="select-banner" id="select-banner">
+    Tap a Pokémon to fill the slot
+    <button onclick="cancelSelectingSlot()">Cancel</button>
 </div>
 
-<div id="teams-list"></div>
+<!-- Drawer overlay -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 
+<!-- Team Drawer -->
+<div class="team-drawer" id="team-drawer">
+    <div class="drawer-header">
+        <h2>🏆 My Teams</h2>
+        <button onclick="closeDrawer()" style="background:none;border:none;color:white;font-size:1.3rem;cursor:pointer;line-height:1">✕</button>
+    </div>
+    <div class="drawer-body" id="teams-list"></div>
+    <div class="drawer-footer">
+        <button class="toggle-btn" style="background:var(--pk-blue);color:white;width:100%;border-color:var(--pk-blue)" onclick="addTeamRow()">+ Add Team</button>
+    </div>
+</div>
+
+<!-- Header -->
+<div class="header-row">
+    <strong style="font-size:1rem">🌿 LG Strategizer</strong>
+    <button class="toggle-btn" onclick="document.body.classList.toggle('dark-mode')">🌓</button>
+</div>
+
+<!-- Controls -->
 <div class="controls">
     <div class="filter-row" id="type-filters">
         <strong>Types:</strong>
-        <button class="toggle-btn" style="margin-left: 10px; border-color: var(--pk-red); color: var(--pk-red);" onclick="resetFilters()">Reset Filters</button>
+        <button class="toggle-btn" style="border-color:var(--pk-red);color:var(--pk-red);font-size:0.7rem;padding:4px 8px" onclick="resetFilters()">Reset</button>
     </div>
     <div class="filter-row">
-        <strong>Filter Logic:</strong>
+        <strong>Logic:</strong>
         <button class="toggle-btn active" id="logic-toggle" onclick="toggleLogic()">OR</button>
     </div>
     <div class="filter-row">
-        <strong>Sorting:</strong></span>
-        <div id="sort-btns" style="display:inline-flex; gap:5px; flex-wrap: wrap;"></div>
-        <button class="toggle-btn" style="margin-left: 10px; border-color: var(--pk-red); color: var(--pk-red);" onclick="resetSort()">Reset Sort</button>
+        <strong>Sort:</strong>
+        <div id="sort-btns" style="display:inline-flex;gap:4px;flex-wrap:wrap"></div>
+        <button class="toggle-btn" style="border-color:var(--pk-red);color:var(--pk-red);font-size:0.7rem;padding:4px 8px" onclick="resetSort()">Reset</button>
+    </div>
+    <div class="filter-row">
+        <strong>Show:</strong>
+        <button class="btn-display active" id="toggle-stats" onclick="toggleDisplay('stats')">📊 Stats</button>
+        <button class="btn-display coming-soon" title="Coming soon" disabled>🥊 Moves</button>
+        <button class="btn-display coming-soon" title="Coming soon" disabled>⚡ Type Chart</button>
+        <button class="btn-display coming-soon" title="Coming soon" disabled>🔀 Evolution</button>
     </div>
 </div>
 
 <div id="main-list"></div>
 
+<!-- Floating team button -->
+<button class="fab-team" onclick="openDrawer()">
+    🏆 Teams <span class="fab-badge" id="team-count">0</span>
+</button>
+
 <script>
-    const typeColors = {
-        normal: '#A8A878', fire: '#F08030', water: '#6890F0', grass: '#78C850', electric: '#F8D030', ice: '#98D8D8',
-        fighting: '#C03028', poison: '#A040A0', ground: '#E0C068', flying: '#A890F0', psychic: '#F85888', bug: '#A8B020',
-        rock: '#B8A038', ghost: '#705898', dragon: '#7038F8', steel: '#B8B8D0'
-    };
+const typeColors = {
+    normal:'#A8A878', fire:'#F08030', water:'#6890F0', grass:'#78C850',
+    electric:'#F8D030', ice:'#98D8D8', fighting:'#C03028', poison:'#A040A0',
+    ground:'#E0C068', flying:'#A890F0', psychic:'#F85888', bug:'#A8B020',
+    rock:'#B8A038', ghost:'#705898', dragon:'#7038F8', steel:'#B8B8D0'
+};
 
-    // Data - Full 151 (Truncated here for brevity, use your full array from before)
-    const pokemonData = [
-        {id:1, name:"bulbasaur", types:["grass","poison"], hp:45, atk:49, def:49, spa:65, spd:65, spe:45, total:318},
-        {id:2, name:"ivysaur", types:["grass","poison"], hp:60, atk:62, def:63, spa:80, spd:80, spe:60, total:405},
-        {id:3, name:"venusaur", types:["grass","poison"], hp:80, atk:82, def:83, spa:100, spd:100, spe:80, total:525},
-        {id:4, name:"charmander", types:["fire"], hp:39, atk:52, def:43, spa:60, spd:50, spe:65, total:309},
-        {id:5, name:"charmeleon", types:["fire"], hp:58, atk:64, def:58, spa:80, spd:65, spe:80, total:405},
-        {id:6, name:"charizard", types:["fire","flying"], hp:78, atk:84, def:78, spa:109, spd:85, spe:100, total:534},
-        {id:7, name:"squirtle", types:["water"], hp:44, atk:48, def:65, spa:50, spd:64, spe:43, total:314},
-        {id:8, name:"wartortle", types:["water"], hp:59, atk:63, def:80, spa:65, spd:80, spe:58, total:405},
-        {id:9, name:"blastoise", types:["water"], hp:79, atk:83, def:100, spa:85, spd:105, spe:78, total:530},
-        {id:10, name:"caterpie", types:["bug"], hp:45, atk:30, def:35, spa:20, spd:20, spe:45, total:195},
-        {id:11, name:"metapod", types:["bug"], hp:50, atk:20, def:55, spa:25, spd:25, spe:30, total:205},
-        {id:12, name:"butterfree", types:["bug","flying"], hp:60, atk:45, def:50, spa:80, spd:80, spe:70, total:385},
-        {id:13, name:"weedle", types:["bug","poison"], hp:40, atk:35, def:30, spa:20, spd:20, spe:50, total:195},
-        {id:14, name:"kakuna", types:["bug","poison"], hp:45, atk:25, def:50, spa:25, spd:25, spe:35, total:205},
-        {id:15, name:"beedrill", types:["bug","poison"], hp:65, atk:80, def:40, spa:45, spd:80, spe:75, total:385},
-        {id:16, name:"pidgey", types:["normal","flying"], hp:40, atk:45, def:40, spa:35, spd:35, spe:56, total:251},
-        {id:17, name:"pidgeotto", types:["normal","flying"], hp:63, atk:60, def:55, spa:50, spd:50, spe:71, total:349},
-        {id:18, name:"pidgeot", types:["normal","flying"], hp:83, atk:80, def:75, spa:70, spd:70, spe:91, total:469},
-        {id:19, name:"rattata", types:["normal"], hp:30, atk:56, def:35, spa:25, spd:35, spe:72, total:253},
-        {id:20, name:"raticate", types:["normal"], hp:55, atk:81, def:60, spa:50, spd:70, spe:97, total:413},
-        {id:21, name:"spearow", types:["normal","flying"], hp:40, atk:60, def:30, spa:31, spd:31, spe:70, total:262},
-        {id:22, name:"fearow", types:["normal","flying"], hp:65, atk:90, def:65, spa:61, spd:61, spe:100, total:442},
-        {id:23, name:"ekans", types:["poison"], hp:35, atk:60, def:44, spa:40, spd:54, spe:55, total:288},
-        {id:24, name:"arbok", types:["poison"], hp:60, atk:85, def:69, spa:65, spd:79, spe:80, total:438},
-        {id:25, name:"pikachu", types:["electric"], hp:35, atk:55, def:30, spa:50, spd:40, spe:90, total:300},
-        {id:26, name:"raichu", types:["electric"], hp:60, atk:90, def:55, spa:90, spd:80, spe:100, total:475},
-        {id:27, name:"sandshrew", types:["ground"], hp:50, atk:75, def:85, spa:20, spd:30, spe:40, total:300},
-        {id:28, name:"sandslash", types:["ground"], hp:75, atk:100, def:110, spa:45, spd:55, spe:65, total:450},
-        {id:29, name:"nidoran-f", types:["poison"], hp:55, atk:47, def:52, spa:40, spd:40, spe:41, total:275},
-        {id:30, name:"nidorina", types:["poison"], hp:70, atk:62, def:67, spa:55, spd:55, spe:56, total:365},
-        {id:31, name:"nidoqueen", types:["poison","ground"], hp:90, atk:82, def:87, spa:75, spd:85, spe:76, total:495},
-        {id:32, name:"nidoran-m", types:["poison"], hp:46, atk:57, def:40, spa:40, spd:40, spe:50, total:273},
-        {id:33, name:"nidorino", types:["poison"], hp:61, atk:72, def:57, spa:55, spd:55, spe:65, total:365},
-        {id:34, name:"nidoking", types:["poison","ground"], hp:81, atk:92, def:77, spa:85, spd:75, spe:85, total:495},
-        {id:35, name:"clefairy", types:["normal"], hp:70, atk:45, def:48, spa:60, spd:65, spe:35, total:323},
-        {id:36, name:"clefable", types:["normal"], hp:95, atk:70, def:73, spa:85, spd:90, spe:60, total:473},
-        {id:37, name:"vulpix", types:["fire"], hp:38, atk:41, def:40, spa:50, spd:65, spe:65, total:299},
-        {id:38, name:"ninetales", types:["fire"], hp:73, atk:76, def:75, spa:81, spd:100, spe:100, total:505},
-        {id:39, name:"jigglypuff", types:["normal"], hp:115, atk:45, def:20, spa:45, spd:25, spe:20, total:270},
-        {id:40, name:"wigglytuff", types:["normal"], hp:140, atk:70, def:45, spa:75, spd:50, spe:45, total:425},
-        {id:41, name:"zubat", types:["poison","flying"], hp:40, atk:45, def:35, spa:30, spd:40, spe:55, total:245},
-        {id:42, name:"golbat", types:["poison","flying"], hp:75, atk:80, def:70, spa:65, spd:75, spe:90, total:455},
-        {id:43, name:"oddish", types:["grass","poison"], hp:45, atk:50, def:55, spa:75, spd:65, spe:30, total:320},
-        {id:44, name:"gloom", types:["grass","poison"], hp:60, atk:65, def:70, spa:85, spd:75, spe:40, total:395},
-        {id:45, name:"vileplume", types:["grass","poison"], hp:75, atk:80, def:85, spa:100, spd:90, spe:50, total:480},
-        {id:46, name:"paras", types:["bug","grass"], hp:35, atk:70, def:55, spa:45, spd:55, spe:25, total:285},
-        {id:47, name:"parasect", types:["bug","grass"], hp:60, atk:95, def:80, spa:60, spd:80, spe:30, total:405},
-        {id:48, name:"venonat", types:["bug","poison"], hp:60, atk:55, def:50, spa:40, spd:55, spe:45, total:305},
-        {id:49, name:"venomoth", types:["bug","poison"], hp:70, atk:65, def:60, spa:90, spd:75, spe:90, total:450},
-        {id:50, name:"diglett", types:["ground"], hp:10, atk:55, def:25, spa:35, spd:45, spe:95, total:265},
-        {id:51, name:"dugtrio", types:["ground"], hp:35, atk:80, def:50, spa:50, spd:70, spe:120, total:405},
-        {id:52, name:"meowth", types:["normal"], hp:40, atk:45, def:35, spa:40, spd:40, spe:90, total:290},
-        {id:53, name:"persian", types:["normal"], hp:65, atk:70, def:60, spa:65, spd:65, spe:115, total:440},
-        {id:54, name:"psyduck", types:["water"], hp:50, atk:52, def:48, spa:65, spd:50, spe:55, total:320},
-        {id:55, name:"golduck", types:["water"], hp:80, atk:82, def:78, spa:95, spd:80, spe:85, total:500},
-        {id:56, name:"mankey", types:["fighting"], hp:40, atk:80, def:35, spa:35, spd:45, spe:70, total:305},
-        {id:57, name:"primeape", types:["fighting"], hp:65, atk:105, def:60, spa:60, spd:70, spe:95, total:455},
-        {id:58, name:"growlithe", types:["fire"], hp:55, atk:70, def:45, spa:70, spd:50, spe:60, total:350},
-        {id:59, name:"arcanine", types:["fire"], hp:90, atk:110, def:80, spa:100, spd:80, spe:95, total:555},
-        {id:60, name:"poliwag", types:["water"], hp:40, atk:50, def:40, spa:40, spd:40, spe:90, total:300},
-        {id:61, name:"poliwhirl", types:["water"], hp:65, atk:65, def:65, spa:50, spd:50, spe:90, total:385},
-        {id:62, name:"poliwrath", types:["water","fighting"], hp:90, atk:85, def:95, spa:70, spd:90, spe:70, total:500},
-        {id:63, name:"abra", types:["psychic"], hp:25, atk:20, def:15, spa:105, spd:55, spe:90, total:310},
-        {id:64, name:"kadabra", types:["psychic"], hp:40, atk:35, def:30, spa:120, spd:70, spe:105, total:400},
-        {id:65, name:"alakazam", types:["psychic"], hp:55, atk:50, def:45, spa:135, spd:85, spe:120, total:490},
-        {id:66, name:"machop", types:["fighting"], hp:70, atk:80, def:50, spa:35, spd:35, spe:35, total:305},
-        {id:67, name:"machoke", types:["fighting"], hp:80, atk:100, def:70, spa:50, spd:60, spe:45, total:405},
-        {id:68, name:"machamp", types:["fighting"], hp:90, atk:130, def:80, spa:65, spd:85, spe:55, total:505},
-        {id:69, name:"bellsprout", types:["grass","poison"], hp:50, atk:75, def:35, spa:70, spd:30, spe:40, total:300},
-        {id:70, name:"weepinbell", types:["grass","poison"], hp:65, atk:90, def:50, spa:85, spd:45, spe:55, total:390},
-        {id:71, name:"victreebel", types:["grass","poison"], hp:80, atk:105, def:65, spa:100, spd:60, spe:70, total:480},
-        {id:72, name:"tentacool", types:["water","poison"], hp:40, atk:40, def:35, spa:50, spd:100, spe:70, total:335},
-        {id:73, name:"tentacruel", types:["water","poison"], hp:80, atk:70, def:65, spa:80, spd:120, spe:100, total:515},
-        {id:74, name:"geodude", types:["rock","ground"], hp:40, atk:80, def:100, spa:30, spd:30, spe:20, total:300},
-        {id:75, name:"graveler", types:["rock","ground"], hp:55, atk:95, def:115, spa:45, spd:45, spe:35, total:390},
-        {id:76, name:"golem", types:["rock","ground"], hp:80, atk:110, def:130, spa:55, spd:65, spe:45, total:485},
-        {id:77, name:"ponyta", types:["fire"], hp:50, atk:85, def:55, spa:65, spd:65, spe:90, total:410},
-        {id:78, name:"rapidash", types:["fire"], hp:65, atk:100, def:70, spa:80, spd:80, spe:105, total:500},
-        {id:79, name:"slowpoke", types:["water","psychic"], hp:90, atk:65, def:65, spa:40, spd:40, spe:15, total:315},
-        {id:80, name:"slowbro", types:["water","psychic"], hp:95, atk:75, def:110, spa:100, spd:80, spe:30, total:490},
-        {id:81, name:"magnemite", types:["electric","steel"], hp:25, atk:35, def:70, spa:95, spd:55, spe:45, total:325},
-        {id:82, name:"magneton", types:["electric","steel"], hp:50, atk:60, def:95, spa:120, spd:70, spe:70, total:465},
-        {id:83, name:"farfetchd", types:["normal","flying"], hp:52, atk:65, def:55, spa:58, spd:62, spe:60, total:352},
-        {id:84, name:"doduo", types:["normal","flying"], hp:35, atk:85, def:45, spa:35, spd:35, spe:75, total:310},
-        {id:85, name:"dodrio", types:["normal","flying"], hp:60, atk:110, def:70, spa:60, spd:60, spe:100, total:460},
-        {id:86, name:"seel", types:["water"], hp:65, atk:45, def:55, spa:45, spd:70, spe:45, total:325},
-        {id:87, name:"dewgong", types:["water","ice"], hp:90, atk:70, def:80, spa:70, spd:95, spe:70, total:475},
-        {id:88, name:"grimer", types:["poison"], hp:80, atk:80, def:50, spa:40, spd:50, spe:25, total:325},
-        {id:89, name:"muk", types:["poison"], hp:105, atk:105, def:75, spa:65, spd:100, spe:50, total:500},
-        {id:90, name:"shellder", types:["water"], hp:30, atk:65, def:100, spa:45, spd:25, spe:40, total:305},
-        {id:91, name:"cloyster", types:["water","ice"], hp:50, atk:95, def:180, spa:85, spd:45, spe:70, total:525},
-        {id:92, name:"gastly", types:["ghost","poison"], hp:30, atk:35, def:30, spa:100, spd:35, spe:80, total:310},
-        {id:93, name:"haunter", types:["ghost","poison"], hp:45, atk:50, def:45, spa:115, spd:55, spe:95, total:405},
-        {id:94, name:"gengar", types:["ghost","poison"], hp:60, atk:65, def:60, spa:130, spd:75, spe:110, total:500},
-        {id:95, name:"onix", types:["rock","ground"], hp:35, atk:45, def:160, spa:30, spd:45, spe:70, total:385},
-        {id:96, name:"drowzee", types:["psychic"], hp:60, atk:48, def:45, spa:43, spd:90, spe:42, total:328},
-        {id:97, name:"hypno", types:["psychic"], hp:85, atk:73, def:70, spa:73, spd:115, spe:67, total:483},
-        {id:98, name:"krabby", types:["water"], hp:30, atk:105, def:90, spa:25, spd:25, spe:50, total:325},
-        {id:99, name:"kingler", types:["water"], hp:55, atk:130, def:115, spa:50, spd:50, spe:75, total:475},
-        {id:100, name:"voltorb", types:["electric"], hp:40, atk:30, def:50, spa:55, spd:55, spe:100, total:330},
-        {id:101, name:"electrode", types:["electric"], hp:60, atk:50, def:70, spa:80, spd:80, spe:140, total:480},
-        {id:102, name:"exeggcute", types:["grass","psychic"], hp:60, atk:40, def:80, spa:60, spd:45, spe:40, total:325},
-        {id:103, name:"exeggutor", types:["grass","psychic"], hp:95, atk:95, def:85, spa:125, spd:65, spe:55, total:520},
-        {id:104, name:"cubone", types:["ground"], hp:50, atk:50, def:95, spa:40, spd:50, spe:35, total:320},
-        {id:105, name:"marowak", types:["ground"], hp:60, atk:80, def:110, spa:50, spd:80, spe:45, total:425},
-        {id:106, name:"hitmonlee", types:["fighting"], hp:50, atk:120, def:53, spa:35, spd:110, spe:87, total:455},
-        {id:107, name:"hitmonchan", types:["fighting"], hp:50, atk:105, def:79, spa:35, spd:110, spe:76, total:455},
-        {id:108, name:"lickitung", types:["normal"], hp:90, atk:55, def:75, spa:60, spd:75, spe:30, total:385},
-        {id:109, name:"koffing", types:["poison"], hp:40, atk:65, def:95, spa:60, spd:45, spe:35, total:340},
-        {id:110, name:"weezing", types:["poison"], hp:65, atk:90, def:120, spa:85, spd:70, spe:60, total:490},
-        {id:111, name:"rhyhorn", types:["ground","rock"], hp:80, atk:85, def:95, spa:30, spd:30, spe:25, total:345},
-        {id:112, name:"rhydon", types:["ground","rock"], hp:105, atk:130, def:120, spa:45, spd:45, spe:40, total:485},
-        {id:113, name:"chansey", types:["normal"], hp:250, atk:5, def:5, spa:35, spd:105, spe:50, total:450},
-        {id:114, name:"tangela", types:["grass"], hp:65, atk:55, def:115, spa:100, spd:40, spe:60, total:435},
-        {id:115, name:"kangaskhan", types:["normal"], hp:105, atk:95, def:80, spa:40, spd:80, spe:90, total:490},
-        {id:116, name:"horsea", types:["water"], hp:30, atk:40, def:70, spa:70, spd:25, spe:60, total:295},
-        {id:117, name:"seadra", types:["water"], hp:55, atk:65, def:95, spa:95, spd:45, spe:85, total:440},
-        {id:118, name:"goldeen", types:["water"], hp:45, atk:67, def:60, spa:35, spd:50, spe:63, total:320},
-        {id:119, name:"seaking", types:["water"], hp:80, atk:92, def:65, spa:65, spd:80, spe:68, total:450},
-        {id:120, name:"staryu", types:["water"], hp:30, atk:45, def:55, spa:70, spd:55, spe:85, total:340},
-        {id:121, name:"starmie", types:["water","psychic"], hp:60, atk:75, def:85, spa:100, spd:85, spe:115, total:520},
-        {id:122, name:"mr-mime", types:["psychic"], hp:40, atk:45, def:65, spa:100, spd:120, spe:90, total:460},
-        {id:123, name:"scyther", types:["bug","flying"], hp:70, atk:110, def:80, spa:55, spd:80, spe:105, total:500},
-        {id:124, name:"jynx", types:["ice","psychic"], hp:65, atk:50, def:35, spa:115, spd:95, spe:95, total:455},
-        {id:125, name:"electabuzz", types:["electric"], hp:65, atk:83, def:57, spa:95, spd:85, spe:105, total:490},
-        {id:126, name:"magmar", types:["fire"], hp:65, atk:95, def:57, spa:100, spd:85, spe:93, total:495},
-        {id:127, name:"pinsir", types:["bug"], hp:65, atk:125, def:100, spa:55, spd:70, spe:85, total:500},
-        {id:128, name:"tauros", types:["normal"], hp:75, atk:100, def:95, spa:40, spd:70, spe:110, total:490},
-        {id:129, name:"magikarp", types:["water"], hp:20, atk:10, def:55, spa:15, spd:20, spe:80, total:200},
-        {id:130, name:"gyarados", types:["water","flying"], hp:95, atk:125, def:79, spa:60, spd:100, spe:81, total:540},
-        {id:131, name:"lapras", types:["water","ice"], hp:130, atk:85, def:80, spa:85, spd:95, spe:60, total:535},
-        {id:132, name:"ditto", types:["normal"], hp:48, atk:48, def:48, spa:48, spd:48, spe:48, total:288},
-        {id:133, name:"eevee", types:["normal"], hp:55, atk:55, def:50, spa:45, spd:65, spe:55, total:325},
-        {id:134, name:"vaporeon", types:["water"], hp:130, atk:65, def:60, spa:110, spd:95, spe:65, total:525},
-        {id:135, name:"jolteon", types:["electric"], hp:65, atk:65, def:60, spa:110, spd:95, spe:130, total:525},
-        {id:136, name:"flareon", types:["fire"], hp:65, atk:130, def:60, spa:95, spd:110, spe:65, total:525},
-        {id:137, name:"porygon", types:["normal"], hp:65, atk:60, def:70, spa:85, spd:75, spe:40, total:395},
-        {id:138, name:"omanyte", types:["rock","water"], hp:35, atk:40, def:100, spa:90, spd:55, spe:35, total:355},
-        {id:139, name:"omastar", types:["rock","water"], hp:70, atk:60, def:125, spa:115, spd:70, spe:55, total:495},
-        {id:140, name:"kabuto", types:["rock","water"], hp:30, atk:80, def:90, spa:55, spd:45, spe:55, total:355},
-        {id:141, name:"kabutops", types:["rock","water"], hp:60, atk:115, def:105, spa:65, spd:70, spe:80, total:495},
-        {id:142, name:"aerodactyl", types:["rock","flying"], hp:80, atk:105, def:65, spa:60, spd:75, spe:130, total:515},
-        {id:143, name:"snorlax", types:["normal"], hp:160, atk:110, def:65, spa:65, spd:110, spe:30, total:540},
-        {id:144, name:"articuno", types:["ice","flying"], hp:90, atk:85, def:100, spa:95, spd:125, spe:85, total:580},
-        {id:145, name:"zapdos", types:["electric","flying"], hp:90, atk:90, def:85, spa:125, spd:90, spe:100, total:580},
-        {id:146, name:"moltres", types:["fire","flying"], hp:90, atk:100, def:90, spa:125, spd:85, spe:90, total:580},
-        {id:147, name:"dratini", types:["dragon"], hp:41, atk:64, def:45, spa:50, spd:50, spe:50, total:300},
-        {id:148, name:"dragonair", types:["dragon"], hp:61, atk:84, def:65, spa:70, spd:70, spe:70, total:420},
-        {id:149, name:"dragonite", types:["dragon","flying"], hp:91, atk:134, def:95, spa:100, spd:100, spe:80, total:600},
-        {id:150, name:"mewtwo", types:["psychic"], hp:106, atk:110, def:90, spa:154, spd:90, spe:130, total:680},
-        {id:151, name:"mew", types:["psychic"], hp:100, atk:100, def:100, spa:100, spd:100, spe:100, total:600}
-    ];
-    let activeSorts = [];
-    let activeFilters = [];
-    let filterLogic = 'OR';
+const pokemonData = [
+    {id:1,name:"bulbasaur",types:["grass","poison"],hp:45,atk:49,def:49,spa:65,spd:65,spe:45,total:318},
+    {id:2,name:"ivysaur",types:["grass","poison"],hp:60,atk:62,def:63,spa:80,spd:80,spe:60,total:405},
+    {id:3,name:"venusaur",types:["grass","poison"],hp:80,atk:82,def:83,spa:100,spd:100,spe:80,total:525},
+    {id:4,name:"charmander",types:["fire"],hp:39,atk:52,def:43,spa:60,spd:50,spe:65,total:309},
+    {id:5,name:"charmeleon",types:["fire"],hp:58,atk:64,def:58,spa:80,spd:65,spe:80,total:405},
+    {id:6,name:"charizard",types:["fire","flying"],hp:78,atk:84,def:78,spa:109,spd:85,spe:100,total:534},
+    {id:7,name:"squirtle",types:["water"],hp:44,atk:48,def:65,spa:50,spd:64,spe:43,total:314},
+    {id:8,name:"wartortle",types:["water"],hp:59,atk:63,def:80,spa:65,spd:80,spe:58,total:405},
+    {id:9,name:"blastoise",types:["water"],hp:79,atk:83,def:100,spa:85,spd:105,spe:78,total:530},
+    {id:10,name:"caterpie",types:["bug"],hp:45,atk:30,def:35,spa:20,spd:20,spe:45,total:195},
+    {id:11,name:"metapod",types:["bug"],hp:50,atk:20,def:55,spa:25,spd:25,spe:30,total:205},
+    {id:12,name:"butterfree",types:["bug","flying"],hp:60,atk:45,def:50,spa:80,spd:80,spe:70,total:385},
+    {id:13,name:"weedle",types:["bug","poison"],hp:40,atk:35,def:30,spa:20,spd:20,spe:50,total:195},
+    {id:14,name:"kakuna",types:["bug","poison"],hp:45,atk:25,def:50,spa:25,spd:25,spe:35,total:205},
+    {id:15,name:"beedrill",types:["bug","poison"],hp:65,atk:80,def:40,spa:45,spd:80,spe:75,total:385},
+    {id:16,name:"pidgey",types:["normal","flying"],hp:40,atk:45,def:40,spa:35,spd:35,spe:56,total:251},
+    {id:17,name:"pidgeotto",types:["normal","flying"],hp:63,atk:60,def:55,spa:50,spd:50,spe:71,total:349},
+    {id:18,name:"pidgeot",types:["normal","flying"],hp:83,atk:80,def:75,spa:70,spd:70,spe:91,total:469},
+    {id:19,name:"rattata",types:["normal"],hp:30,atk:56,def:35,spa:25,spd:35,spe:72,total:253},
+    {id:20,name:"raticate",types:["normal"],hp:55,atk:81,def:60,spa:50,spd:70,spe:97,total:413},
+    {id:21,name:"spearow",types:["normal","flying"],hp:40,atk:60,def:30,spa:31,spd:31,spe:70,total:262},
+    {id:22,name:"fearow",types:["normal","flying"],hp:65,atk:90,def:65,spa:61,spd:61,spe:100,total:442},
+    {id:23,name:"ekans",types:["poison"],hp:35,atk:60,def:44,spa:40,spd:54,spe:55,total:288},
+    {id:24,name:"arbok",types:["poison"],hp:60,atk:85,def:69,spa:65,spd:79,spe:80,total:438},
+    {id:25,name:"pikachu",types:["electric"],hp:35,atk:55,def:30,spa:50,spd:40,spe:90,total:300},
+    {id:26,name:"raichu",types:["electric"],hp:60,atk:90,def:55,spa:90,spd:80,spe:100,total:475},
+    {id:27,name:"sandshrew",types:["ground"],hp:50,atk:75,def:85,spa:20,spd:30,spe:40,total:300},
+    {id:28,name:"sandslash",types:["ground"],hp:75,atk:100,def:110,spa:45,spd:55,spe:65,total:450},
+    {id:29,name:"nidoran-f",types:["poison"],hp:55,atk:47,def:52,spa:40,spd:40,spe:41,total:275},
+    {id:30,name:"nidorina",types:["poison"],hp:70,atk:62,def:67,spa:55,spd:55,spe:56,total:365},
+    {id:31,name:"nidoqueen",types:["poison","ground"],hp:90,atk:82,def:87,spa:75,spd:85,spe:76,total:495},
+    {id:32,name:"nidoran-m",types:["poison"],hp:46,atk:57,def:40,spa:40,spd:40,spe:50,total:273},
+    {id:33,name:"nidorino",types:["poison"],hp:61,atk:72,def:57,spa:55,spd:55,spe:65,total:365},
+    {id:34,name:"nidoking",types:["poison","ground"],hp:81,atk:92,def:77,spa:85,spd:75,spe:85,total:495},
+    {id:35,name:"clefairy",types:["normal"],hp:70,atk:45,def:48,spa:60,spd:65,spe:35,total:323},
+    {id:36,name:"clefable",types:["normal"],hp:95,atk:70,def:73,spa:85,spd:90,spe:60,total:473},
+    {id:37,name:"vulpix",types:["fire"],hp:38,atk:41,def:40,spa:50,spd:65,spe:65,total:299},
+    {id:38,name:"ninetales",types:["fire"],hp:73,atk:76,def:75,spa:81,spd:100,spe:100,total:505},
+    {id:39,name:"jigglypuff",types:["normal"],hp:115,atk:45,def:20,spa:45,spd:25,spe:20,total:270},
+    {id:40,name:"wigglytuff",types:["normal"],hp:140,atk:70,def:45,spa:75,spd:50,spe:45,total:425},
+    {id:41,name:"zubat",types:["poison","flying"],hp:40,atk:45,def:35,spa:30,spd:40,spe:55,total:245},
+    {id:42,name:"golbat",types:["poison","flying"],hp:75,atk:80,def:70,spa:65,spd:75,spe:90,total:455},
+    {id:43,name:"oddish",types:["grass","poison"],hp:45,atk:50,def:55,spa:75,spd:65,spe:30,total:320},
+    {id:44,name:"gloom",types:["grass","poison"],hp:60,atk:65,def:70,spa:85,spd:75,spe:40,total:395},
+    {id:45,name:"vileplume",types:["grass","poison"],hp:75,atk:80,def:85,spa:100,spd:90,spe:50,total:480},
+    {id:46,name:"paras",types:["bug","grass"],hp:35,atk:70,def:55,spa:45,spd:55,spe:25,total:285},
+    {id:47,name:"parasect",types:["bug","grass"],hp:60,atk:95,def:80,spa:60,spd:80,spe:30,total:405},
+    {id:48,name:"venonat",types:["bug","poison"],hp:60,atk:55,def:50,spa:40,spd:55,spe:45,total:305},
+    {id:49,name:"venomoth",types:["bug","poison"],hp:70,atk:65,def:60,spa:90,spd:75,spe:90,total:450},
+    {id:50,name:"diglett",types:["ground"],hp:10,atk:55,def:25,spa:35,spd:45,spe:95,total:265},
+    {id:51,name:"dugtrio",types:["ground"],hp:35,atk:80,def:50,spa:50,spd:70,spe:120,total:405},
+    {id:52,name:"meowth",types:["normal"],hp:40,atk:45,def:35,spa:40,spd:40,spe:90,total:290},
+    {id:53,name:"persian",types:["normal"],hp:65,atk:70,def:60,spa:65,spd:65,spe:115,total:440},
+    {id:54,name:"psyduck",types:["water"],hp:50,atk:52,def:48,spa:65,spd:50,spe:55,total:320},
+    {id:55,name:"golduck",types:["water"],hp:80,atk:82,def:78,spa:95,spd:80,spe:85,total:500},
+    {id:56,name:"mankey",types:["fighting"],hp:40,atk:80,def:35,spa:35,spd:45,spe:70,total:305},
+    {id:57,name:"primeape",types:["fighting"],hp:65,atk:105,def:60,spa:60,spd:70,spe:95,total:455},
+    {id:58,name:"growlithe",types:["fire"],hp:55,atk:70,def:45,spa:70,spd:50,spe:60,total:350},
+    {id:59,name:"arcanine",types:["fire"],hp:90,atk:110,def:80,spa:100,spd:80,spe:95,total:555},
+    {id:60,name:"poliwag",types:["water"],hp:40,atk:50,def:40,spa:40,spd:40,spe:90,total:300},
+    {id:61,name:"poliwhirl",types:["water"],hp:65,atk:65,def:65,spa:50,spd:50,spe:90,total:385},
+    {id:62,name:"poliwrath",types:["water","fighting"],hp:90,atk:85,def:95,spa:70,spd:90,spe:70,total:500},
+    {id:63,name:"abra",types:["psychic"],hp:25,atk:20,def:15,spa:105,spd:55,spe:90,total:310},
+    {id:64,name:"kadabra",types:["psychic"],hp:40,atk:35,def:30,spa:120,spd:70,spe:105,total:400},
+    {id:65,name:"alakazam",types:["psychic"],hp:55,atk:50,def:45,spa:135,spd:85,spe:120,total:490},
+    {id:66,name:"machop",types:["fighting"],hp:70,atk:80,def:50,spa:35,spd:35,spe:35,total:305},
+    {id:67,name:"machoke",types:["fighting"],hp:80,atk:100,def:70,spa:50,spd:60,spe:45,total:405},
+    {id:68,name:"machamp",types:["fighting"],hp:90,atk:130,def:80,spa:65,spd:85,spe:55,total:505},
+    {id:69,name:"bellsprout",types:["grass","poison"],hp:50,atk:75,def:35,spa:70,spd:30,spe:40,total:300},
+    {id:70,name:"weepinbell",types:["grass","poison"],hp:65,atk:90,def:50,spa:85,spd:45,spe:55,total:390},
+    {id:71,name:"victreebel",types:["grass","poison"],hp:80,atk:105,def:65,spa:100,spd:60,spe:70,total:480},
+    {id:72,name:"tentacool",types:["water","poison"],hp:40,atk:40,def:35,spa:50,spd:100,spe:70,total:335},
+    {id:73,name:"tentacruel",types:["water","poison"],hp:80,atk:70,def:65,spa:80,spd:120,spe:100,total:515},
+    {id:74,name:"geodude",types:["rock","ground"],hp:40,atk:80,def:100,spa:30,spd:30,spe:20,total:300},
+    {id:75,name:"graveler",types:["rock","ground"],hp:55,atk:95,def:115,spa:45,spd:45,spe:35,total:390},
+    {id:76,name:"golem",types:["rock","ground"],hp:80,atk:110,def:130,spa:55,spd:65,spe:45,total:485},
+    {id:77,name:"ponyta",types:["fire"],hp:50,atk:85,def:55,spa:65,spd:65,spe:90,total:410},
+    {id:78,name:"rapidash",types:["fire"],hp:65,atk:100,def:70,spa:80,spd:80,spe:105,total:500},
+    {id:79,name:"slowpoke",types:["water","psychic"],hp:90,atk:65,def:65,spa:40,spd:40,spe:15,total:315},
+    {id:80,name:"slowbro",types:["water","psychic"],hp:95,atk:75,def:110,spa:100,spd:80,spe:30,total:490},
+    {id:81,name:"magnemite",types:["electric","steel"],hp:25,atk:35,def:70,spa:95,spd:55,spe:45,total:325},
+    {id:82,name:"magneton",types:["electric","steel"],hp:50,atk:60,def:95,spa:120,spd:70,spe:70,total:465},
+    {id:83,name:"farfetchd",types:["normal","flying"],hp:52,atk:65,def:55,spa:58,spd:62,spe:60,total:352},
+    {id:84,name:"doduo",types:["normal","flying"],hp:35,atk:85,def:45,spa:35,spd:35,spe:75,total:310},
+    {id:85,name:"dodrio",types:["normal","flying"],hp:60,atk:110,def:70,spa:60,spd:60,spe:100,total:460},
+    {id:86,name:"seel",types:["water"],hp:65,atk:45,def:55,spa:45,spd:70,spe:45,total:325},
+    {id:87,name:"dewgong",types:["water","ice"],hp:90,atk:70,def:80,spa:70,spd:95,spe:70,total:475},
+    {id:88,name:"grimer",types:["poison"],hp:80,atk:80,def:50,spa:40,spd:50,spe:25,total:325},
+    {id:89,name:"muk",types:["poison"],hp:105,atk:105,def:75,spa:65,spd:100,spe:50,total:500},
+    {id:90,name:"shellder",types:["water"],hp:30,atk:65,def:100,spa:45,spd:25,spe:40,total:305},
+    {id:91,name:"cloyster",types:["water","ice"],hp:50,atk:95,def:180,spa:85,spd:45,spe:70,total:525},
+    {id:92,name:"gastly",types:["ghost","poison"],hp:30,atk:35,def:30,spa:100,spd:35,spe:80,total:310},
+    {id:93,name:"haunter",types:["ghost","poison"],hp:45,atk:50,def:45,spa:115,spd:55,spe:95,total:405},
+    {id:94,name:"gengar",types:["ghost","poison"],hp:60,atk:65,def:60,spa:130,spd:75,spe:110,total:500},
+    {id:95,name:"onix",types:["rock","ground"],hp:35,atk:45,def:160,spa:30,spd:45,spe:70,total:385},
+    {id:96,name:"drowzee",types:["psychic"],hp:60,atk:48,def:45,spa:43,spd:90,spe:42,total:328},
+    {id:97,name:"hypno",types:["psychic"],hp:85,atk:73,def:70,spa:73,spd:115,spe:67,total:483},
+    {id:98,name:"krabby",types:["water"],hp:30,atk:105,def:90,spa:25,spd:25,spe:50,total:325},
+    {id:99,name:"kingler",types:["water"],hp:55,atk:130,def:115,spa:50,spd:50,spe:75,total:475},
+    {id:100,name:"voltorb",types:["electric"],hp:40,atk:30,def:50,spa:55,spd:55,spe:100,total:330},
+    {id:101,name:"electrode",types:["electric"],hp:60,atk:50,def:70,spa:80,spd:80,spe:140,total:480},
+    {id:102,name:"exeggcute",types:["grass","psychic"],hp:60,atk:40,def:80,spa:60,spd:45,spe:40,total:325},
+    {id:103,name:"exeggutor",types:["grass","psychic"],hp:95,atk:95,def:85,spa:125,spd:65,spe:55,total:520},
+    {id:104,name:"cubone",types:["ground"],hp:50,atk:50,def:95,spa:40,spd:50,spe:35,total:320},
+    {id:105,name:"marowak",types:["ground"],hp:60,atk:80,def:110,spa:50,spd:80,spe:45,total:425},
+    {id:106,name:"hitmonlee",types:["fighting"],hp:50,atk:120,def:53,spa:35,spd:110,spe:87,total:455},
+    {id:107,name:"hitmonchan",types:["fighting"],hp:50,atk:105,def:79,spa:35,spd:110,spe:76,total:455},
+    {id:108,name:"lickitung",types:["normal"],hp:90,atk:55,def:75,spa:60,spd:75,spe:30,total:385},
+    {id:109,name:"koffing",types:["poison"],hp:40,atk:65,def:95,spa:60,spd:45,spe:35,total:340},
+    {id:110,name:"weezing",types:["poison"],hp:65,atk:90,def:120,spa:85,spd:70,spe:60,total:490},
+    {id:111,name:"rhyhorn",types:["ground","rock"],hp:80,atk:85,def:95,spa:30,spd:30,spe:25,total:345},
+    {id:112,name:"rhydon",types:["ground","rock"],hp:105,atk:130,def:120,spa:45,spd:45,spe:40,total:485},
+    {id:113,name:"chansey",types:["normal"],hp:250,atk:5,def:5,spa:35,spd:105,spe:50,total:450},
+    {id:114,name:"tangela",types:["grass"],hp:65,atk:55,def:115,spa:100,spd:40,spe:60,total:435},
+    {id:115,name:"kangaskhan",types:["normal"],hp:105,atk:95,def:80,spa:40,spd:80,spe:90,total:490},
+    {id:116,name:"horsea",types:["water"],hp:30,atk:40,def:70,spa:70,spd:25,spe:60,total:295},
+    {id:117,name:"seadra",types:["water"],hp:55,atk:65,def:95,spa:95,spd:45,spe:85,total:440},
+    {id:118,name:"goldeen",types:["water"],hp:45,atk:67,def:60,spa:35,spd:50,spe:63,total:320},
+    {id:119,name:"seaking",types:["water"],hp:80,atk:92,def:65,spa:65,spd:80,spe:68,total:450},
+    {id:120,name:"staryu",types:["water"],hp:30,atk:45,def:55,spa:70,spd:55,spe:85,total:340},
+    {id:121,name:"starmie",types:["water","psychic"],hp:60,atk:75,def:85,spa:100,spd:85,spe:115,total:520},
+    {id:122,name:"mr-mime",types:["psychic"],hp:40,atk:45,def:65,spa:100,spd:120,spe:90,total:460},
+    {id:123,name:"scyther",types:["bug","flying"],hp:70,atk:110,def:80,spa:55,spd:80,spe:105,total:500},
+    {id:124,name:"jynx",types:["ice","psychic"],hp:65,atk:50,def:35,spa:115,spd:95,spe:95,total:455},
+    {id:125,name:"electabuzz",types:["electric"],hp:65,atk:83,def:57,spa:95,spd:85,spe:105,total:490},
+    {id:126,name:"magmar",types:["fire"],hp:65,atk:95,def:57,spa:100,spd:85,spe:93,total:495},
+    {id:127,name:"pinsir",types:["bug"],hp:65,atk:125,def:100,spa:55,spd:70,spe:85,total:500},
+    {id:128,name:"tauros",types:["normal"],hp:75,atk:100,def:95,spa:40,spd:70,spe:110,total:490},
+    {id:129,name:"magikarp",types:["water"],hp:20,atk:10,def:55,spa:15,spd:20,spe:80,total:200},
+    {id:130,name:"gyarados",types:["water","flying"],hp:95,atk:125,def:79,spa:60,spd:100,spe:81,total:540},
+    {id:131,name:"lapras",types:["water","ice"],hp:130,atk:85,def:80,spa:85,spd:95,spe:60,total:535},
+    {id:132,name:"ditto",types:["normal"],hp:48,atk:48,def:48,spa:48,spd:48,spe:48,total:288},
+    {id:133,name:"eevee",types:["normal"],hp:55,atk:55,def:50,spa:45,spd:65,spe:55,total:325},
+    {id:134,name:"vaporeon",types:["water"],hp:130,atk:65,def:60,spa:110,spd:95,spe:65,total:525},
+    {id:135,name:"jolteon",types:["electric"],hp:65,atk:65,def:60,spa:110,spd:95,spe:130,total:525},
+    {id:136,name:"flareon",types:["fire"],hp:65,atk:130,def:60,spa:95,spd:110,spe:65,total:525},
+    {id:137,name:"porygon",types:["normal"],hp:65,atk:60,def:70,spa:85,spd:75,spe:40,total:395},
+    {id:138,name:"omanyte",types:["rock","water"],hp:35,atk:40,def:100,spa:90,spd:55,spe:35,total:355},
+    {id:139,name:"omastar",types:["rock","water"],hp:70,atk:60,def:125,spa:115,spd:70,spe:55,total:495},
+    {id:140,name:"kabuto",types:["rock","water"],hp:30,atk:80,def:90,spa:55,spd:45,spe:55,total:355},
+    {id:141,name:"kabutops",types:["rock","water"],hp:60,atk:115,def:105,spa:65,spd:70,spe:80,total:495},
+    {id:142,name:"aerodactyl",types:["rock","flying"],hp:80,atk:105,def:65,spa:60,spd:75,spe:130,total:515},
+    {id:143,name:"snorlax",types:["normal"],hp:160,atk:110,def:65,spa:65,spd:110,spe:30,total:540},
+    {id:144,name:"articuno",types:["ice","flying"],hp:90,atk:85,def:100,spa:95,spd:125,spe:85,total:580},
+    {id:145,name:"zapdos",types:["electric","flying"],hp:90,atk:90,def:85,spa:125,spd:90,spe:100,total:580},
+    {id:146,name:"moltres",types:["fire","flying"],hp:90,atk:100,def:90,spa:125,spd:85,spe:90,total:580},
+    {id:147,name:"dratini",types:["dragon"],hp:41,atk:64,def:45,spa:50,spd:50,spe:50,total:300},
+    {id:148,name:"dragonair",types:["dragon"],hp:61,atk:84,def:65,spa:70,spd:70,spe:70,total:420},
+    {id:149,name:"dragonite",types:["dragon","flying"],hp:91,atk:134,def:95,spa:100,spd:100,spe:80,total:600},
+    {id:150,name:"mewtwo",types:["psychic"],hp:106,atk:110,def:90,spa:154,spd:90,spe:130,total:680},
+    {id:151,name:"mew",types:["psychic"],hp:100,atk:100,def:100,spa:100,spd:100,spe:100,total:600}
+];
 
-    function init() {
-        const filterContainer = document.getElementById('type-filters');
-        Object.keys(typeColors).forEach(type => {
-            const span = document.createElement('span');
-            span.className = 'type-pill';
-            span.style.backgroundColor = typeColors[type];
-            span.innerText = type;
-            span.onclick = () => toggleFilter(type, span);
-            filterContainer.insertBefore(span, filterContainer.lastElementChild);
-        });
+// ===== STATE =====
+let activeSorts = [];
+let activeFilters = [];
+let filterLogic = 'OR';
+let displayToggles = { stats: true };
+let teams = [];
+let teamIdCounter = 0;
+let selectingSlot = null;
 
-        const sortContainer = document.getElementById('sort-btns');
-        ['id','hp','atk','def','spa','spd','spe', 'total'].forEach(s => {
-            const btn = document.createElement('button');
-            btn.className = 'btn-sort';
-            btn.dataset.stat = s;
-            btn.innerText = s.toUpperCase();
-            btn.onclick = () => handleSort(s);
-            sortContainer.appendChild(btn);
-        });
+// ===== DISPLAY TOGGLE =====
+function toggleDisplay(section) {
+    displayToggles[section] = !displayToggles[section];
+    document.getElementById('toggle-' + section).classList.toggle('active', displayToggles[section]);
+    document.querySelectorAll('#main-list .section-' + section).forEach(el => {
+        el.classList.toggle('hidden', !displayToggles[section]);
+    });
+}
 
-        addTeamRow();
-        render();
+// ===== TEAMS =====
+function addTeamRow() {
+    const team = { id: ++teamIdCounter, name: 'Team ' + teamIdCounter, slots: [null,null,null,null,null,null] };
+    teams.push(team);
+    renderTeams();
+}
+
+function removeTeam(teamId) {
+    teams = teams.filter(t => t.id !== teamId);
+    renderTeams();
+    updateFABCount();
+    updateListHighlights();
+}
+
+function renameTeam(teamId, name) {
+    const t = teams.find(t => t.id === teamId);
+    if(t) t.name = name;
+}
+
+function removeFromSlot(teamId, slotIndex, e) {
+    if(e) e.stopPropagation();
+    const t = teams.find(t => t.id === teamId);
+    if(t) { t.slots[slotIndex] = null; renderTeams(); updateFABCount(); updateListHighlights(); }
+}
+
+function addToSlot(teamId, slotIndex, pokemonId) {
+    const t = teams.find(t => t.id === teamId);
+    if(t) { t.slots[slotIndex] = pokemonId; renderTeams(); updateFABCount(); updateListHighlights(); }
+}
+
+function startSelectingSlot(teamId, slotIndex) {
+    selectingSlot = { teamId, slotIndex };
+    document.getElementById('select-banner').classList.add('show');
+    closeDrawer();
+}
+
+function cancelSelectingSlot() {
+    selectingSlot = null;
+    document.getElementById('select-banner').classList.remove('show');
+}
+
+function updateFABCount() {
+    const filled = teams.reduce((n, t) => n + t.slots.filter(s => s !== null).length, 0);
+    document.getElementById('team-count').textContent = filled;
+}
+
+function updateListHighlights() {
+    const inTeam = new Set(teams.flatMap(t => t.slots.filter(s => s !== null)));
+    document.querySelectorAll('#main-list .card').forEach(card => {
+        card.classList.toggle('in-team', inTeam.has(parseInt(card.dataset.id)));
+    });
+}
+
+function renderTeams() {
+    const container = document.getElementById('teams-list');
+    container.innerHTML = '';
+
+    if(teams.length === 0) {
+        container.innerHTML = '<p style="opacity:0.5;text-align:center;font-size:0.85rem;margin-top:30px">No teams yet.<br>Tap "+ Add Team" to get started.</p>';
+        return;
     }
 
-    function toggleFilter(type, el) {
-        if(activeFilters.includes(type)) activeFilters = activeFilters.filter(t => t !== type);
-        else activeFilters.push(type);
-        el.classList.toggle('active');
-        render();
-    }
+    teams.forEach(team => {
+        const div = document.createElement('div');
+        div.className = 'team-container';
 
-    function resetFilters() {
-        activeFilters = [];
-        document.querySelectorAll('.type-pill').forEach(p => p.classList.remove('active'));
-        render();
-    }
-
-    function toggleLogic() {
-        filterLogic = filterLogic === 'OR' ? 'AND' : 'OR';
-        document.getElementById('logic-toggle').innerText = filterLogic;
-        render();
-    }
-
-    function handleSort(stat) {
-        const idx = activeSorts.findIndex(s => s.stat === stat);
-        if(idx === -1) activeSorts.push({stat, dir:'desc'});
-        else if(activeSorts[idx].dir === 'desc') activeSorts[idx].dir = 'asc';
-        else activeSorts.splice(idx, 1);
-        render();
-    }
-
-    function resetSort() {
-        activeSorts = [];
-        render();
-    }
-
-    function render() {
-        const container = document.getElementById('main-list');
-        let data = pokemonData.filter(p => {
-            if (activeFilters.length === 0) return true;
-            return filterLogic === 'OR' 
-                ? activeFilters.some(t => p.types.includes(t)) 
-                : activeFilters.every(t => p.types.includes(t));
-        });
-
-        data.sort((a,b) => {
-            for(let s of activeSorts) {
-                if(a[s.stat] !== b[s.stat]) 
-                    return s.dir === 'desc' ? b[s.stat] - a[s.stat] : a[s.stat] - b[s.stat];
-            }
-            return 0;
-        });
-
-        container.innerHTML = data.map(p => createCardHTML(p)).join('');
-        updateSortUI();
-    }
-    function createCardHTML(p) {
-        const stats = ['hp','atk','def','spa','spd','spe'];
-        const maxVal = Math.max(...stats.map(s => p[s]));
-
-        const statsHTML = stats.map(s => {
-            const val = p[s];
-            const width = Math.min((val / 160) * 100, 100);
-            let tier = val < 60 ? 'bar-low' : val > 90 ? 'bar-high' : 'bar-mid';
-            
-            return `
-                <div class="stat-row ${val === maxVal ? 'max-stat' : ''}">
-                    <span class="stat-label">${s.toUpperCase()}</span>
-                    <span style="width: 25px;">${val}</span>
-                    <div class="stat-bar-bg">
-                        <div class="stat-bar-fill ${tier}" style="width: ${width}%"></div>
+        let slotsHTML = '';
+        team.slots.forEach((pokemonId, slotIdx) => {
+            if(pokemonId !== null) {
+                const p = pokemonData.find(x => x.id === pokemonId);
+                slotsHTML += `<div class="slot">
+                    <div class="team-card">
+                        <button class="remove-btn" onclick="removeFromSlot(${team.id},${slotIdx},event)">×</button>
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png" alt="${p.name}">
+                        <span class="tc-name">${p.name}</span>
+                        <div class="tc-types">${p.types.map(t=>`<span class="tc-type" style="background:${typeColors[t]}">${t}</span>`).join('')}</div>
                     </div>
                 </div>`;
-        }).join('');
-
-        return `
-            <div class="card" data-id="${p.id}" onclick="handleCardClick(this, ${p.id})">
-                <span class="id-badge">#${String(p.id).padStart(3, '0')}</span>
-                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png" alt="${p.name}">
-                <div class="card-header">
-                    <span class="card-name">${p.name}</span>
-                    <div class="type-box">
-                        ${p.types.map(t => `<span class="type-pill" style="background:${typeColors[t]}">${t}</span>`).join('')}
-                    </div>
-                </div>
-                <div class="stats-box">${statsHTML}</div>
-                <div class="id-badge" style="margin-top:8px; opacity:1">TOTAL: ${p.total}</div>
-            </div>`;
-    }
-    function updateSortUI() {
-        document.querySelectorAll('.btn-sort').forEach(btn => {
-            const s = activeSorts.find(as => as.stat === btn.dataset.stat);
-            if(s) {
-                btn.classList.add('active');
-                btn.innerHTML = `${s.stat.toUpperCase()} ${s.dir === 'desc' ? '▼' : '▲'} <span class="sort-order-badge">${activeSorts.indexOf(s)+1}</span>`;
             } else {
-                btn.classList.remove('active');
-                btn.innerHTML = btn.dataset.stat.toUpperCase();
+                slotsHTML += `<div class="slot" onclick="startSelectingSlot(${team.id},${slotIdx})"></div>`;
             }
         });
-    }
 
-    // 3. Updated addTeamRow (Swap & Replace Logic)
-    function addTeamRow() {
-        const teamsList = document.getElementById('teams-list');
-        const container = document.createElement('div');
-        container.className = 'team-container';
-        
-        container.innerHTML = `
-            <button class="delete-row" onclick="this.parentElement.remove()">×</button>
-            <div class="team-slots">
-                ${'<div class="slot"></div>'.repeat(6)}
+        div.innerHTML = `
+            <div class="team-label-row">
+                <input class="team-name-input" value="${team.name}"
+                    oninput="renameTeam(${team.id},this.value)">
+                <button class="delete-row-btn" onclick="removeTeam(${team.id})">🗑</button>
             </div>
+            <div class="team-slots">${slotsHTML}</div>
         `;
-        
-        teamsList.appendChild(container);
+        container.appendChild(div);
+    });
+}
 
-        container.querySelectorAll('.slot').forEach(slot => {
-            new Sortable(slot, {
-                group: 'shared',
-                animation: 150,
-                // Disable the global 'swap' plugin as it interferes with "move-to-empty"
-                swap: false, 
-                onAdd: function (evt) {
-                    const incoming = evt.item;
-                    const destinationSlot = evt.to;
-                    const sourceSlot = evt.from;
-                    
-                    // 1. REPLACEMENT LOGIC (From Library)
-                    if (sourceSlot.id === 'main-list') {
-                        if (destinationSlot.children.length > 1) {
-                            // Remove the old resident, keep the new one
-                            Array.from(destinationSlot.children).forEach(card => {
-                                if (card !== incoming) card.remove();
-                            });
-                        }
-                    } 
-                    // 2. SWAP LOGIC (Between Team Slots)
-                    else {
-                        if (destinationSlot.children.length > 1) {
-                            // Find the card that was already in this slot
-                            const existingCard = Array.from(destinationSlot.children).find(card => card !== incoming);
-                            // Move the existing card back to where the incoming one came from
-                            sourceSlot.appendChild(existingCard);
-                        }
-                    }
-                }
-            });
-        });
+// ===== DRAWER =====
+function openDrawer() { document.getElementById('team-drawer').classList.add('open'); document.getElementById('drawer-overlay').classList.add('open'); }
+function closeDrawer() { document.getElementById('team-drawer').classList.remove('open'); document.getElementById('drawer-overlay').classList.remove('open'); }
+
+// ===== CARD CLICK =====
+function handleCardClick(el, pokemonId) {
+    if(selectingSlot) {
+        addToSlot(selectingSlot.teamId, selectingSlot.slotIndex, pokemonId);
+        cancelSelectingSlot();
+        openDrawer();
+        return;
     }
-    function handleCardClick(el, pokemonId) {
-        // If the card is already in a team slot, clicking it removes it
-        if (el.closest('.slot')) {
-            el.remove();
-            return;
+    if(teams.length === 0) addTeamRow();
+    for(const t of teams) {
+        const idx = t.slots.indexOf(null);
+        if(idx !== -1) { addToSlot(t.id, idx, pokemonId); return; }
+    }
+    openDrawer(); // all slots full
+}
+
+// ===== FILTER / SORT =====
+function toggleFilter(type, el) {
+    if(activeFilters.includes(type)) activeFilters = activeFilters.filter(t => t !== type);
+    else activeFilters.push(type);
+    el.classList.toggle('active');
+    render();
+}
+function resetFilters() {
+    activeFilters = [];
+    document.querySelectorAll('.type-pill').forEach(p => p.classList.remove('active'));
+    render();
+}
+function toggleLogic() {
+    filterLogic = filterLogic === 'OR' ? 'AND' : 'OR';
+    document.getElementById('logic-toggle').innerText = filterLogic;
+    render();
+}
+function handleSort(stat) {
+    const idx = activeSorts.findIndex(s => s.stat === stat);
+    if(idx === -1) activeSorts.push({stat, dir:'desc'});
+    else if(activeSorts[idx].dir === 'desc') activeSorts[idx].dir = 'asc';
+    else activeSorts.splice(idx, 1);
+    render();
+}
+function resetSort() { activeSorts = []; render(); }
+
+// ===== RENDER =====
+function render() {
+    const container = document.getElementById('main-list');
+    let data = pokemonData.filter(p => {
+        if(activeFilters.length === 0) return true;
+        return filterLogic === 'OR'
+            ? activeFilters.some(t => p.types.includes(t))
+            : activeFilters.every(t => p.types.includes(t));
+    });
+    data.sort((a,b) => {
+        for(let s of activeSorts) {
+            if(a[s.stat] !== b[s.stat])
+                return s.dir === 'desc' ? b[s.stat]-a[s.stat] : a[s.stat]-b[s.stat];
         }
-        
-        // Otherwise, find the first empty slot in any team row
-        const allSlots = Array.from(document.querySelectorAll('.slot'));
-        const emptySlot = allSlots.find(slot => slot.children.length === 0);
-        
-        if (emptySlot) {
-            const p = pokemonData.find(x => x.id === pokemonId);
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = createCardHTML(p);
-            emptySlot.appendChild(tempDiv.firstElementChild);
+        return 0;
+    });
+    container.innerHTML = data.map(p => createCardHTML(p)).join('');
+    updateSortUI();
+    updateListHighlights();
+}
+
+function createCardHTML(p) {
+    const stats = ['hp','atk','def','spa','spd','spe'];
+    const maxVal = Math.max(...stats.map(s => p[s]));
+    const statsHTML = stats.map(s => {
+        const val = p[s];
+        const width = Math.min((val/160)*100, 100);
+        const tier = val < 60 ? 'bar-low' : val > 90 ? 'bar-high' : 'bar-mid';
+        return `<div class="stat-row ${val===maxVal?'max-stat':''}">
+            <span class="stat-label">${s.toUpperCase()}</span>
+            <span style="width:22px">${val}</span>
+            <div class="stat-bar-bg"><div class="stat-bar-fill ${tier}" style="width:${width}%"></div></div>
+        </div>`;
+    }).join('');
+
+    const statsHidden = displayToggles.stats ? '' : ' hidden';
+    return `<div class="card" data-id="${p.id}" onclick="handleCardClick(this,${p.id})">
+        <span class="id-badge">#${String(p.id).padStart(3,'0')}</span>
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png" alt="${p.name}">
+        <div class="card-header">
+            <span class="card-name">${p.name}</span>
+            <div class="type-box">${p.types.map(t=>`<span class="type-pill" style="background:${typeColors[t]}">${t}</span>`).join('')}</div>
+        </div>
+        <div class="section-stats${statsHidden}">
+            <div class="stats-box">${statsHTML}</div>
+            <div class="card-total">TOTAL: ${p.total}</div>
+        </div>
+    </div>`;
+}
+
+function updateSortUI() {
+    document.querySelectorAll('.btn-sort').forEach(btn => {
+        const s = activeSorts.find(as => as.stat === btn.dataset.stat);
+        if(s) {
+            btn.classList.add('active');
+            btn.innerHTML = `${s.stat.toUpperCase()} ${s.dir==='desc'?'▼':'▲'} <span style="background:var(--pk-red);color:white;border-radius:10px;padding:0 4px;font-size:0.6rem">${activeSorts.indexOf(s)+1}</span>`;
+        } else {
+            btn.classList.remove('active');
+            btn.innerHTML = btn.dataset.stat.toUpperCase();
         }
-    }
-        // Helper to keep code clean
-    function addRemoveButton(card) {
-        if (card.querySelector('.remove-card')) return;
-        const btn = document.createElement('button');
-        btn.className = 'remove-card';
-        btn.innerHTML = '×';
-        btn.onclick = (e) => { e.stopPropagation(); card.remove(); };
-        card.appendChild(btn);
-    }
-    new Sortable(document.getElementById('main-list'), {
-        group: {
-            name: 'shared',
-            pull: 'clone', // Clones the card so it stays in the list
-            put: false    // Prevents team cards from being dropped into the library
-        },
-        animation: 150,
-        sort: false // Keeps library order static
+    });
+}
+
+// ===== INIT =====
+function init() {
+    const filterContainer = document.getElementById('type-filters');
+    Object.keys(typeColors).forEach(type => {
+        const span = document.createElement('span');
+        span.className = 'type-pill';
+        span.style.backgroundColor = typeColors[type];
+        span.innerText = type;
+        span.onclick = () => toggleFilter(type, span);
+        filterContainer.insertBefore(span, filterContainer.lastElementChild);
     });
 
-    init();
+    const sortContainer = document.getElementById('sort-btns');
+    ['id','hp','atk','def','spa','spd','spe','total'].forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-sort';
+        btn.dataset.stat = s;
+        btn.innerText = s.toUpperCase();
+        btn.onclick = () => handleSort(s);
+        sortContainer.appendChild(btn);
+    });
+
+    addTeamRow();
+    render();
+}
+
+init();
 </script>
 </body>
 </html>
