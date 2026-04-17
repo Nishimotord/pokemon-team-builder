@@ -8,28 +8,20 @@
     :root {
         --bg: #f4f4f9; --card-bg: #ffffff; --text: #333; --border: #ddd;
         --pk-blue: #3b4cca; --pk-yellow: #ffde00; --pk-red: #cc0000;
-        --drawer-width: 340px;
+        --drawer-width: 420px;
     }
-    body.dark-mode {
-        --bg: #1a1a1a; --card-bg: #2d2d2d; --text: #f0f0f0; --border: #444;
-    }
+    body.dark-mode { --bg: #1a1a1a; --card-bg: #2d2d2d; --text: #f0f0f0; --border: #444; }
     * { box-sizing: border-box; }
     body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 12px; transition: background 0.3s, color 0.3s; margin: 0; overflow-x: hidden; }
-
-    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; }
-    .header-left { display: flex; gap: 8px; align-items: center; }
-
-    /* Drawer overlay */
+    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; }
     .drawer-overlay.open { display: block; }
-
-    /* Team drawer */
     .team-drawer {
         position: fixed; top: 0; right: -100%; width: min(var(--drawer-width), 100vw);
-        height: 100%; background: var(--card-bg); z-index: 201;
+        height: 100%; background: var(--bg); z-index: 201;
         transition: right 0.35s cubic-bezier(.4,0,.2,1);
         display: flex; flex-direction: column;
-        box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+        box-shadow: -4px 0 24px rgba(0,0,0,0.35);
     }
     .team-drawer.open { right: 0; }
     .drawer-header {
@@ -40,29 +32,26 @@
     .drawer-header h2 { margin: 0; font-size: 1rem; }
     .drawer-body { flex: 1; overflow-y: auto; padding: 12px; }
     .drawer-footer { padding: 10px 12px; border-top: 2px solid var(--border); flex-shrink: 0; }
-
-    /* Team container in drawer */
-    .team-container { background: rgba(0,0,0,0.05); padding: 10px; border-radius: 12px; margin-bottom: 10px; border: 2px solid var(--border); }
+    .team-container { background: rgba(0,0,0,0.05); padding: 10px; border-radius: 12px; margin-bottom: 12px; border: 2px solid var(--border); }
     .team-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .team-name-input { background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--text); font-weight: bold; font-size: 0.9rem; width: 160px; outline: none; padding: 2px 4px; }
-    .team-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .team-name-input { background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--text); font-weight: bold; font-size: 0.9rem; width: 170px; outline: none; padding: 2px 4px; }
+    .team-slots { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .slot {
-        min-height: 110px; background: rgba(0,0,0,0.05); border: 2px dashed var(--border);
-        border-radius: 8px; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; position: relative; overflow: hidden; transition: border-color 0.2s, background 0.2s;
+        background: rgba(0,0,0,0.05); border: 2px dashed var(--border);
+        border-radius: 10px; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; position: relative; overflow: hidden;
+        transition: border-color 0.2s, background 0.2s; min-height: 80px;
     }
-    .slot:not(:has(.team-card))::after { content: '+'; font-size: 1.5rem; opacity: 0.25; pointer-events: none; }
-    .slot:not(:has(.team-card)):hover { border-color: var(--pk-blue); background: rgba(59,76,202,0.1); }
-
-    /* Mini card in team slots */
-    .team-card { width: 100%; padding: 5px; display: flex; flex-direction: column; align-items: center; position: relative; background: var(--card-bg); border-radius: 6px; }
-    .team-card img { width: 54px; height: 54px; image-rendering: pixelated; }
-    .team-card .tc-name { font-size: 0.62rem; font-weight: bold; text-align: center; text-transform: capitalize; margin-top: 2px; }
-    .team-card .tc-types { display: flex; gap: 2px; justify-content: center; flex-wrap: wrap; margin-top: 2px; }
-    .team-card .tc-type { font-size: 0.48rem; padding: 1px 4px; border-radius: 10px; color: white; font-weight: bold; text-transform: uppercase; text-shadow: 1px 1px 1px rgba(0,0,0,0.4); }
-    .remove-btn { position: absolute; top: 2px; right: 2px; background: var(--pk-red); color: white; border: none; border-radius: 50%; width: 15px; height: 15px; font-size: 0.65rem; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1; }
-
-    /* FAB */
+    .slot.empty-slot::after { content: '+'; font-size: 1.8rem; opacity: 0.2; pointer-events: none; }
+    .slot.empty-slot:hover { border-color: var(--pk-blue); background: rgba(59,76,202,0.08); }
+    .slot .card { width: 100%; margin: 0; border: none; border-radius: 8px; cursor: default; padding: 8px; }
+    .slot .card:active { transform: none; }
+    .slot-remove-btn {
+        position: absolute; top: 4px; right: 4px; z-index: 10;
+        background: var(--pk-red); color: white; border: none; border-radius: 50%;
+        width: 18px; height: 18px; font-size: 0.7rem; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1;
+    }
     .fab-team {
         position: fixed; bottom: 20px; right: 20px; z-index: 150;
         background: var(--pk-blue); color: var(--pk-yellow);
@@ -70,13 +59,10 @@
         padding: 10px 18px; font-weight: bold; font-size: 0.9rem;
         cursor: pointer; box-shadow: 0 4px 15px rgba(59,76,202,0.5);
         display: flex; align-items: center; gap: 8px;
-        -webkit-tap-highlight-color: transparent; user-select: none;
-        transition: transform 0.15s;
+        -webkit-tap-highlight-color: transparent; user-select: none; transition: transform 0.15s;
     }
     .fab-team:active { transform: scale(0.95); }
-    .fab-badge { background: var(--pk-red); color: white; border-radius: 10px; padding: 1px 6px; font-size: 0.7rem; }
-
-    /* Controls */
+    .fab-badge { background: var(--pk-red); color: white; border-radius: 10px; padding: 1px 7px; font-size: 0.7rem; min-width: 20px; text-align: center; }
     .controls {
         background: var(--card-bg); padding: 12px; border-radius: 12px; margin-bottom: 12px;
         position: sticky; top: 0; z-index: 100; border: 1px solid var(--border);
@@ -85,71 +71,68 @@
     .filter-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
     .filter-row:last-child { margin-bottom: 0; }
     .filter-row strong { font-size: 0.8rem; white-space: nowrap; }
-
     .type-pill { padding: 4px 10px; border-radius: 20px; cursor: pointer; border: 2px solid transparent; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); -webkit-tap-highlight-color: transparent; user-select: none; }
     .type-pill.active { border-color: var(--pk-yellow); box-shadow: 0 0 8px var(--pk-yellow); }
-
     .toggle-btn, .btn-sort, .btn-display { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); cursor: pointer; font-weight: bold; font-size: 0.75rem; -webkit-tap-highlight-color: transparent; user-select: none; white-space: nowrap; transition: 0.15s; }
     .active { background: var(--pk-blue) !important; color: white !important; border-color: var(--pk-blue) !important; }
     .btn-display.active { background: #27ae60 !important; border-color: #27ae60 !important; color: white !important; }
     .btn-display.coming-soon { border-style: dashed; opacity: 0.55; cursor: default; }
-
-    /* Main list */
     #main-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px; padding: 4px; padding-bottom: 80px; }
-
-    /* Pokemon card */
     .card { padding: 10px; display: flex; flex-direction: column; position: relative; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transition: transform 0.12s; }
     .card:active { transform: scale(0.97); }
     .card.in-team { border-color: var(--pk-yellow); box-shadow: 0 0 0 2px var(--pk-yellow); }
-
+    .team-count-badge {
+        display: none; position: absolute; top: 4px; right: 4px;
+        background: var(--pk-red); color: white; border-radius: 50%;
+        width: 20px; height: 20px; font-size: 0.65rem; font-weight: bold;
+        align-items: center; justify-content: center; z-index: 5;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+    .card.in-team .team-count-badge { display: flex; }
     .id-badge { display: block; text-align: center; font-size: 0.7rem; opacity: 0.55; font-family: monospace; }
     .card img { width: 72px; height: 72px; image-rendering: pixelated; margin: 0 auto; display: block; }
     .card-header { text-align: center; margin: 6px 0; }
     .card-name { text-transform: capitalize; font-size: 0.88rem; font-weight: bold; }
-    .type-box { display: flex; justify-content: center; gap: 4px; margin-top: 4px; }
-
-    /* Stats section */
-    .section-stats { }
+    .type-box { display: flex; justify-content: center; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
     .section-stats.hidden { display: none; }
     .stats-box { background: rgba(0,0,0,0.08); border-radius: 5px; padding: 7px; display: flex; flex-direction: column; gap: 3px; font-family: monospace; font-size: 0.68rem; }
     .stat-row { display: flex; align-items: center; gap: 6px; border-radius: 2px; }
     .stat-label { width: 28px; font-weight: bold; }
     .stat-bar-bg { flex-grow: 1; height: 6px; background: rgba(0,0,0,0.1); border-radius: 3px; overflow: hidden; }
     .stat-bar-fill { height: 100%; border-radius: 3px; }
-    .bar-low { background: #ff4d4d; }
-    .bar-mid { background: #ffcc00; }
-    .bar-high { background: #4caf50; }
-    .stat-row.max-stat { outline: 2px solid rgb(0,0,0); outline-offset: 1px; background: rgba(255,255,255,0.1); }
+    .bar-low { background: #ff4d4d; } .bar-mid { background: #ffcc00; } .bar-high { background: #4caf50; }
+    .stat-row.max-stat { outline: 2px solid #000; outline-offset: 1px; background: rgba(255,255,255,0.1); }
     body.dark-mode .stat-row.max-stat { outline-color: #fff; background: rgba(255,255,255,0.15); }
     .card-total { text-align: center; font-size: 0.75rem; font-weight: bold; margin-top: 6px; opacity: 0.85; }
-
-    /* Selecting mode banner */
+    .section-evo.hidden { display: none; }
+    .evo-chain {
+        margin-top: 6px; background: rgba(0,0,0,0.06); border-radius: 6px;
+        padding: 6px 4px; display: flex; align-items: center; justify-content: center;
+        flex-wrap: wrap; gap: 2px;
+    }
+    .evo-node { display: flex; flex-direction: column; align-items: center; gap: 1px; flex-shrink: 0; }
+    .evo-node img { width: 40px; height: 40px; image-rendering: pixelated; }
+    .evo-node .evo-name { font-size: 0.52rem; text-transform: capitalize; text-align: center; font-weight: bold; opacity: 0.85; }
+    .evo-node .evo-num { font-size: 0.45rem; opacity: 0.5; font-family: monospace; }
+    .evo-node.current-mon img { filter: drop-shadow(0 0 3px var(--pk-yellow)); }
+    .evo-arrow { display: flex; flex-direction: column; align-items: center; font-size: 0.85rem; padding: 0 2px; flex-shrink: 0; line-height: 1; }
+    .evo-arrow-label { font-size: 0.42rem; text-align: center; opacity: 0.7; max-width: 36px; line-height: 1.2; }
     .select-banner { display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 300; background: var(--pk-blue); color: white; text-align: center; padding: 10px; font-weight: bold; font-size: 0.9rem; }
     .select-banner.show { display: block; }
     .select-banner button { background: var(--pk-red); color: white; border: none; border-radius: 4px; padding: 4px 10px; margin-left: 10px; cursor: pointer; font-weight: bold; }
-
-    .delete-row-btn { background: none; border: none; color: var(--pk-red); font-size: 1rem; cursor: pointer; padding: 2px 6px; -webkit-tap-highlight-color: transparent; }
-
+    .delete-row-btn { background: none; border: none; color: var(--pk-red); font-size: 1rem; cursor: pointer; padding: 2px 6px; }
     @media (max-width: 480px) {
         #main-list { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
         body { padding: 8px; }
+        :root { --drawer-width: 100vw; }
     }
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
     </style>
 </head>
 <body class="dark-mode">
-
-<!-- Selecting mode banner -->
-<div class="select-banner" id="select-banner">
-    Tap a Pokémon to fill the slot
-    <button onclick="cancelSelectingSlot()">Cancel</button>
-</div>
-
-<!-- Drawer overlay -->
+<div class="select-banner" id="select-banner">Tap a Pokémon to fill the slot <button onclick="cancelSelectingSlot()">Cancel</button></div>
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
-
-<!-- Team Drawer -->
 <div class="team-drawer" id="team-drawer">
     <div class="drawer-header">
         <h2>🏆 My Teams</h2>
@@ -160,14 +143,10 @@
         <button class="toggle-btn" style="background:var(--pk-blue);color:white;width:100%;border-color:var(--pk-blue)" onclick="addTeamRow()">+ Add Team</button>
     </div>
 </div>
-
-<!-- Header -->
 <div class="header-row">
     <strong style="font-size:1rem">🌿 LG Strategizer</strong>
     <button class="toggle-btn" onclick="document.body.classList.toggle('dark-mode')">🌓</button>
 </div>
-
-<!-- Controls -->
 <div class="controls">
     <div class="filter-row" id="type-filters">
         <strong>Types:</strong>
@@ -185,19 +164,13 @@
     <div class="filter-row">
         <strong>Show:</strong>
         <button class="btn-display active" id="toggle-stats" onclick="toggleDisplay('stats')">📊 Stats</button>
+        <button class="btn-display active" id="toggle-evo" onclick="toggleDisplay('evo')">🔀 Evolution</button>
         <button class="btn-display coming-soon" title="Coming soon" disabled>🥊 Moves</button>
         <button class="btn-display coming-soon" title="Coming soon" disabled>⚡ Type Chart</button>
-        <button class="btn-display coming-soon" title="Coming soon" disabled>🔀 Evolution</button>
     </div>
 </div>
-
 <div id="main-list"></div>
-
-<!-- Floating team button -->
-<button class="fab-team" onclick="openDrawer()">
-    🏆 Teams <span class="fab-badge" id="team-count">0</span>
-</button>
-
+<button class="fab-team" onclick="openDrawer()">🏆 Teams <span class="fab-badge" id="team-count">0</span></button>
 <script>
 const typeColors = {
     normal:'#A8A878', fire:'#F08030', water:'#6890F0', grass:'#78C850',
@@ -360,254 +333,275 @@ const pokemonData = [
     {id:151,name:"mew",types:["psychic"],hp:100,atk:100,def:100,spa:100,spd:100,spe:100,total:600}
 ];
 
-// ===== STATE =====
-let activeSorts = [];
-let activeFilters = [];
-let filterLogic = 'OR';
-let displayToggles = { stats: true };
-let teams = [];
-let teamIdCounter = 0;
-let selectingSlot = null;
+// Evolution chains. Each chain = ordered array of stages.
+// stage.trigger describes what causes evolution TO the NEXT stage.
+// {type:'level',lvl:N} | {type:'stone',stone:'...'} | {type:'trade'} | {type:'friendship'}
+const evoChains = [
+    [{id:1,trigger:{type:'level',lvl:16}},{id:2,trigger:{type:'level',lvl:32}},{id:3}],
+    [{id:4,trigger:{type:'level',lvl:16}},{id:5,trigger:{type:'level',lvl:36}},{id:6}],
+    [{id:7,trigger:{type:'level',lvl:16}},{id:8,trigger:{type:'level',lvl:36}},{id:9}],
+    [{id:10,trigger:{type:'level',lvl:7}},{id:11,trigger:{type:'level',lvl:10}},{id:12}],
+    [{id:13,trigger:{type:'level',lvl:7}},{id:14,trigger:{type:'level',lvl:10}},{id:15}],
+    [{id:16,trigger:{type:'level',lvl:18}},{id:17,trigger:{type:'level',lvl:36}},{id:18}],
+    [{id:19,trigger:{type:'level',lvl:20}},{id:20}],
+    [{id:21,trigger:{type:'level',lvl:20}},{id:22}],
+    [{id:23,trigger:{type:'level',lvl:22}},{id:24}],
+    [{id:25,trigger:{type:'stone',stone:'Thunder Stone'}},{id:26}],
+    [{id:27,trigger:{type:'level',lvl:22}},{id:28}],
+    [{id:29,trigger:{type:'level',lvl:16}},{id:30,trigger:{type:'stone',stone:'Moon Stone'}},{id:31}],
+    [{id:32,trigger:{type:'level',lvl:16}},{id:33,trigger:{type:'stone',stone:'Moon Stone'}},{id:34}],
+    [{id:35,trigger:{type:'stone',stone:'Moon Stone'}},{id:36}],
+    [{id:37,trigger:{type:'stone',stone:'Fire Stone'}},{id:38}],
+    [{id:39,trigger:{type:'stone',stone:'Moon Stone'}},{id:40}],
+    [{id:41,trigger:{type:'level',lvl:22}},{id:42}],
+    [{id:43,trigger:{type:'level',lvl:21}},{id:44,trigger:{type:'stone',stone:'Leaf Stone'}},{id:45}],
+    [{id:46,trigger:{type:'level',lvl:24}},{id:47}],
+    [{id:48,trigger:{type:'level',lvl:31}},{id:49}],
+    [{id:50,trigger:{type:'level',lvl:26}},{id:51}],
+    [{id:52,trigger:{type:'level',lvl:28}},{id:53}],
+    [{id:54,trigger:{type:'level',lvl:33}},{id:55}],
+    [{id:56,trigger:{type:'level',lvl:28}},{id:57}],
+    [{id:58,trigger:{type:'stone',stone:'Fire Stone'}},{id:59}],
+    [{id:60,trigger:{type:'level',lvl:25}},{id:61,trigger:{type:'stone',stone:'Water Stone'}},{id:62}],
+    [{id:63,trigger:{type:'trade'}},{id:64,trigger:{type:'trade'}},{id:65}],
+    [{id:66,trigger:{type:'level',lvl:28}},{id:67,trigger:{type:'trade'}},{id:68}],
+    [{id:69,trigger:{type:'level',lvl:21}},{id:70,trigger:{type:'level',lvl:36}},{id:71}],
+    [{id:72,trigger:{type:'level',lvl:30}},{id:73}],
+    [{id:74,trigger:{type:'level',lvl:25}},{id:75,trigger:{type:'trade'}},{id:76}],
+    [{id:77,trigger:{type:'level',lvl:40}},{id:78}],
+    [{id:79,trigger:{type:'level',lvl:37}},{id:80}],
+    [{id:81,trigger:{type:'level',lvl:30}},{id:82}],
+    [{id:84,trigger:{type:'level',lvl:31}},{id:85}],
+    [{id:86,trigger:{type:'level',lvl:34}},{id:87}],
+    [{id:88,trigger:{type:'level',lvl:38}},{id:89}],
+    [{id:90,trigger:{type:'stone',stone:'Water Stone'}},{id:91}],
+    [{id:92,trigger:{type:'level',lvl:25}},{id:93,trigger:{type:'trade'}},{id:94}],
+    [{id:96,trigger:{type:'level',lvl:26}},{id:97}],
+    [{id:98,trigger:{type:'level',lvl:28}},{id:99}],
+    [{id:100,trigger:{type:'level',lvl:30}},{id:101}],
+    [{id:102,trigger:{type:'stone',stone:'Leaf Stone'}},{id:103}],
+    [{id:104,trigger:{type:'level',lvl:28}},{id:105}],
+    [{id:109,trigger:{type:'level',lvl:35}},{id:110}],
+    [{id:111,trigger:{type:'level',lvl:42}},{id:112}],
+    [{id:116,trigger:{type:'level',lvl:32}},{id:117}],
+    [{id:118,trigger:{type:'level',lvl:33}},{id:119}],
+    [{id:120,trigger:{type:'stone',stone:'Water Stone'}},{id:121}],
+    [{id:129,trigger:{type:'level',lvl:20}},{id:130}],
+    [{id:133,trigger:{type:'stone',stone:'Water Stone'}},{id:134}],
+    [{id:133,trigger:{type:'stone',stone:'Thunder Stone'}},{id:135}],
+    [{id:133,trigger:{type:'stone',stone:'Fire Stone'}},{id:136}],
+    [{id:138,trigger:{type:'level',lvl:40}},{id:139}],
+    [{id:140,trigger:{type:'level',lvl:40}},{id:141}],
+    [{id:147,trigger:{type:'level',lvl:30}},{id:148,trigger:{type:'level',lvl:55}},{id:149}],
+    [{id:83}],[{id:95}],[{id:106}],[{id:107}],[{id:108}],[{id:113}],[{id:114}],
+    [{id:115}],[{id:122}],[{id:123}],[{id:124}],[{id:125}],[{id:126}],[{id:127}],
+    [{id:128}],[{id:131}],[{id:132}],[{id:137}],[{id:142}],[{id:143}],
+    [{id:144}],[{id:145}],[{id:146}],[{id:150}],[{id:151}]
+];
 
-// ===== DISPLAY TOGGLE =====
+// Build reverse lookup: pokemonId -> list of chains containing it
+const evoChainsByPokemon = {};
+evoChains.forEach(chain => {
+    chain.forEach(stage => {
+        if(!evoChainsByPokemon[stage.id]) evoChainsByPokemon[stage.id] = [];
+        evoChainsByPokemon[stage.id].push(chain);
+    });
+});
+
+function triggerLabel(t) {
+    if(!t) return '';
+    if(t.type==='level') return 'Lv.' + t.lvl;
+    if(t.type==='stone') return t.stone;
+    if(t.type==='trade') return 'Trade';
+    if(t.type==='friendship') return 'Friendship';
+    return '';
+}
+
+function buildEvoChainHTML(pokemonId) {
+    const chains = evoChainsByPokemon[pokemonId] || [];
+    const seen = new Set();
+    const unique = chains.filter(c => {
+        const key = c.map(s=>s.id).join('-');
+        if(seen.has(key)) return false;
+        seen.add(key); return true;
+    });
+    return unique.map(chain => {
+        if(chain.length <= 1) return '';
+        let html = '<div class="evo-chain">';
+        chain.forEach((stage, i) => {
+            const isCurrent = stage.id === pokemonId;
+            const pName = (pokemonData.find(p=>p.id===stage.id)||{name:'?'}).name;
+            html += `<div class="evo-node${isCurrent?' current-mon':''}">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${stage.id}.png" loading="lazy">
+                <span class="evo-name">${pName}</span>
+                <span class="evo-num">#${String(stage.id).padStart(3,'0')}</span>
+            </div>`;
+            if(i < chain.length-1 && chain[i].trigger) {
+                html += `<div class="evo-arrow"><span>&#8594;</span><span class="evo-arrow-label">${triggerLabel(chain[i].trigger)}</span></div>`;
+            }
+        });
+        return html + '</div>';
+    }).join('');
+}
+
+// STATE
+let activeSorts = [], activeFilters = [], filterLogic = 'OR';
+let displayToggles = { stats: true, evo: true };
+let teams = [], teamIdCounter = 0, selectingSlot = null;
+
 function toggleDisplay(section) {
     displayToggles[section] = !displayToggles[section];
-    document.getElementById('toggle-' + section).classList.toggle('active', displayToggles[section]);
-    document.querySelectorAll('#main-list .section-' + section).forEach(el => {
-        el.classList.toggle('hidden', !displayToggles[section]);
-    });
+    document.getElementById('toggle-'+section).classList.toggle('active', displayToggles[section]);
+    document.querySelectorAll('.section-'+section).forEach(el => el.classList.toggle('hidden', !displayToggles[section]));
 }
 
-// ===== TEAMS =====
 function addTeamRow() {
-    const team = { id: ++teamIdCounter, name: 'Team ' + teamIdCounter, slots: [null,null,null,null,null,null] };
-    teams.push(team);
+    teams.push({id:++teamIdCounter, name:'Team '+teamIdCounter, slots:[null,null,null,null,null,null]});
     renderTeams();
 }
-
-function removeTeam(teamId) {
-    teams = teams.filter(t => t.id !== teamId);
-    renderTeams();
-    updateFABCount();
-    updateListHighlights();
-}
-
-function renameTeam(teamId, name) {
-    const t = teams.find(t => t.id === teamId);
-    if(t) t.name = name;
-}
-
-function removeFromSlot(teamId, slotIndex, e) {
+function removeTeam(id) { teams=teams.filter(t=>t.id!==id); renderTeams(); updateFABCount(); updateListHighlights(); }
+function renameTeam(id,name) { const t=teams.find(t=>t.id===id); if(t) t.name=name; }
+function removeFromSlot(tid,si,e) {
     if(e) e.stopPropagation();
-    const t = teams.find(t => t.id === teamId);
-    if(t) { t.slots[slotIndex] = null; renderTeams(); updateFABCount(); updateListHighlights(); }
+    const t=teams.find(t=>t.id===tid);
+    if(t){t.slots[si]=null; renderTeams(); updateFABCount(); updateListHighlights();}
 }
-
-function addToSlot(teamId, slotIndex, pokemonId) {
-    const t = teams.find(t => t.id === teamId);
-    if(t) { t.slots[slotIndex] = pokemonId; renderTeams(); updateFABCount(); updateListHighlights(); }
+function addToSlot(tid,si,pid) {
+    const t=teams.find(t=>t.id===tid);
+    if(t){t.slots[si]=pid; renderTeams(); updateFABCount(); updateListHighlights();}
 }
-
-function startSelectingSlot(teamId, slotIndex) {
-    selectingSlot = { teamId, slotIndex };
+function startSelectingSlot(tid,si) {
+    selectingSlot={teamId:tid,slotIndex:si};
     document.getElementById('select-banner').classList.add('show');
     closeDrawer();
 }
-
 function cancelSelectingSlot() {
-    selectingSlot = null;
+    selectingSlot=null;
     document.getElementById('select-banner').classList.remove('show');
 }
-
 function updateFABCount() {
-    const filled = teams.reduce((n, t) => n + t.slots.filter(s => s !== null).length, 0);
-    document.getElementById('team-count').textContent = filled;
+    document.getElementById('team-count').textContent = teams.reduce((n,t)=>n+t.slots.filter(s=>s!==null).length,0);
 }
-
+function countInTeams(pid) { return teams.reduce((n,t)=>n+t.slots.filter(s=>s===pid).length,0); }
 function updateListHighlights() {
-    const inTeam = new Set(teams.flatMap(t => t.slots.filter(s => s !== null)));
     document.querySelectorAll('#main-list .card').forEach(card => {
-        card.classList.toggle('in-team', inTeam.has(parseInt(card.dataset.id)));
+        const id=parseInt(card.dataset.id), count=countInTeams(id);
+        card.classList.toggle('in-team', count>0);
+        const b=card.querySelector('.team-count-badge'); if(b) b.textContent=count;
     });
 }
 
 function renderTeams() {
-    const container = document.getElementById('teams-list');
-    container.innerHTML = '';
-
-    if(teams.length === 0) {
-        container.innerHTML = '<p style="opacity:0.5;text-align:center;font-size:0.85rem;margin-top:30px">No teams yet.<br>Tap "+ Add Team" to get started.</p>';
+    const container=document.getElementById('teams-list');
+    container.innerHTML='';
+    if(!teams.length){
+        container.innerHTML='<p style="opacity:0.5;text-align:center;font-size:0.85rem;margin-top:30px">No teams yet.<br>Tap &quot;+ Add Team&quot; to get started.</p>';
         return;
     }
-
     teams.forEach(team => {
-        const div = document.createElement('div');
-        div.className = 'team-container';
-
-        let slotsHTML = '';
-        team.slots.forEach((pokemonId, slotIdx) => {
-            if(pokemonId !== null) {
-                const p = pokemonData.find(x => x.id === pokemonId);
-                slotsHTML += `<div class="slot">
-                    <div class="team-card">
-                        <button class="remove-btn" onclick="removeFromSlot(${team.id},${slotIdx},event)">×</button>
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png" alt="${p.name}">
-                        <span class="tc-name">${p.name}</span>
-                        <div class="tc-types">${p.types.map(t=>`<span class="tc-type" style="background:${typeColors[t]}">${t}</span>`).join('')}</div>
-                    </div>
+        const div=document.createElement('div');
+        div.className='team-container';
+        let sh='';
+        team.slots.forEach((pid,si) => {
+            if(pid!==null) {
+                const p=pokemonData.find(x=>x.id===pid);
+                sh+=`<div class="slot" style="border:none;background:none;cursor:default;padding:0;overflow:visible;min-height:auto">
+                    <button class="slot-remove-btn" onclick="removeFromSlot(${team.id},${si},event)">&#215;</button>
+                    ${createCardHTML(p,false)}
                 </div>`;
             } else {
-                slotsHTML += `<div class="slot" onclick="startSelectingSlot(${team.id},${slotIdx})"></div>`;
+                sh+=`<div class="slot empty-slot" onclick="startSelectingSlot(${team.id},${si})"></div>`;
             }
         });
-
-        div.innerHTML = `
-            <div class="team-label-row">
-                <input class="team-name-input" value="${team.name}"
-                    oninput="renameTeam(${team.id},this.value)">
-                <button class="delete-row-btn" onclick="removeTeam(${team.id})">🗑</button>
-            </div>
-            <div class="team-slots">${slotsHTML}</div>
-        `;
+        div.innerHTML=`<div class="team-label-row">
+            <input class="team-name-input" value="${team.name}" oninput="renameTeam(${team.id},this.value)">
+            <button class="delete-row-btn" onclick="removeTeam(${team.id})">&#128465;</button>
+        </div><div class="team-slots">${sh}</div>`;
         container.appendChild(div);
     });
 }
 
-// ===== DRAWER =====
-function openDrawer() { document.getElementById('team-drawer').classList.add('open'); document.getElementById('drawer-overlay').classList.add('open'); }
-function closeDrawer() { document.getElementById('team-drawer').classList.remove('open'); document.getElementById('drawer-overlay').classList.remove('open'); }
+function openDrawer(){document.getElementById('team-drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('open');}
+function closeDrawer(){document.getElementById('team-drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');}
 
-// ===== CARD CLICK =====
-function handleCardClick(el, pokemonId) {
-    if(selectingSlot) {
-        addToSlot(selectingSlot.teamId, selectingSlot.slotIndex, pokemonId);
-        cancelSelectingSlot();
-        openDrawer();
-        return;
-    }
-    if(teams.length === 0) addTeamRow();
-    for(const t of teams) {
-        const idx = t.slots.indexOf(null);
-        if(idx !== -1) { addToSlot(t.id, idx, pokemonId); return; }
-    }
-    openDrawer(); // all slots full
+function handleCardClick(el,pid) {
+    if(selectingSlot){addToSlot(selectingSlot.teamId,selectingSlot.slotIndex,pid);cancelSelectingSlot();openDrawer();return;}
+    if(!teams.length) addTeamRow();
+    for(const t of teams){const i=t.slots.indexOf(null);if(i!==-1){addToSlot(t.id,i,pid);return;}}
+    openDrawer();
 }
 
-// ===== FILTER / SORT =====
-function toggleFilter(type, el) {
-    if(activeFilters.includes(type)) activeFilters = activeFilters.filter(t => t !== type);
-    else activeFilters.push(type);
-    el.classList.toggle('active');
+function toggleFilter(type,el){
+    if(activeFilters.includes(type)) activeFilters=activeFilters.filter(t=>t!==type); else activeFilters.push(type);
+    el.classList.toggle('active'); render();
+}
+function resetFilters(){activeFilters=[];document.querySelectorAll('.type-pill').forEach(p=>p.classList.remove('active'));render();}
+function toggleLogic(){filterLogic=filterLogic==='OR'?'AND':'OR';document.getElementById('logic-toggle').innerText=filterLogic;render();}
+function handleSort(s){
+    const i=activeSorts.findIndex(x=>x.stat===s);
+    if(i===-1) activeSorts.push({stat:s,dir:'desc'});
+    else if(activeSorts[i].dir==='desc') activeSorts[i].dir='asc';
+    else activeSorts.splice(i,1);
     render();
 }
-function resetFilters() {
-    activeFilters = [];
-    document.querySelectorAll('.type-pill').forEach(p => p.classList.remove('active'));
-    render();
-}
-function toggleLogic() {
-    filterLogic = filterLogic === 'OR' ? 'AND' : 'OR';
-    document.getElementById('logic-toggle').innerText = filterLogic;
-    render();
-}
-function handleSort(stat) {
-    const idx = activeSorts.findIndex(s => s.stat === stat);
-    if(idx === -1) activeSorts.push({stat, dir:'desc'});
-    else if(activeSorts[idx].dir === 'desc') activeSorts[idx].dir = 'asc';
-    else activeSorts.splice(idx, 1);
-    render();
-}
-function resetSort() { activeSorts = []; render(); }
+function resetSort(){activeSorts=[];render();}
 
-// ===== RENDER =====
 function render() {
-    const container = document.getElementById('main-list');
-    let data = pokemonData.filter(p => {
-        if(activeFilters.length === 0) return true;
-        return filterLogic === 'OR'
-            ? activeFilters.some(t => p.types.includes(t))
-            : activeFilters.every(t => p.types.includes(t));
+    let data=pokemonData.filter(p=>{
+        if(!activeFilters.length) return true;
+        return filterLogic==='OR'?activeFilters.some(t=>p.types.includes(t)):activeFilters.every(t=>p.types.includes(t));
     });
-    data.sort((a,b) => {
-        for(let s of activeSorts) {
-            if(a[s.stat] !== b[s.stat])
-                return s.dir === 'desc' ? b[s.stat]-a[s.stat] : a[s.stat]-b[s.stat];
-        }
-        return 0;
-    });
-    container.innerHTML = data.map(p => createCardHTML(p)).join('');
-    updateSortUI();
-    updateListHighlights();
+    data.sort((a,b)=>{for(let s of activeSorts){if(a[s.stat]!==b[s.stat]) return s.dir==='desc'?b[s.stat]-a[s.stat]:a[s.stat]-b[s.stat];}return 0;});
+    document.getElementById('main-list').innerHTML=data.map(p=>createCardHTML(p,true)).join('');
+    updateSortUI(); updateListHighlights();
 }
 
-function createCardHTML(p) {
-    const stats = ['hp','atk','def','spa','spd','spe'];
-    const maxVal = Math.max(...stats.map(s => p[s]));
-    const statsHTML = stats.map(s => {
-        const val = p[s];
-        const width = Math.min((val/160)*100, 100);
-        const tier = val < 60 ? 'bar-low' : val > 90 ? 'bar-high' : 'bar-mid';
-        return `<div class="stat-row ${val===maxVal?'max-stat':''}">
-            <span class="stat-label">${s.toUpperCase()}</span>
-            <span style="width:22px">${val}</span>
-            <div class="stat-bar-bg"><div class="stat-bar-fill ${tier}" style="width:${width}%"></div></div>
-        </div>`;
+function createCardHTML(p, clickable=true) {
+    const stats=['hp','atk','def','spa','spd','spe'];
+    const maxVal=Math.max(...stats.map(s=>p[s]));
+    const statsHTML=stats.map(s=>{
+        const v=p[s], w=Math.min((v/160)*100,100), tier=v<60?'bar-low':v>90?'bar-high':'bar-mid';
+        return `<div class="stat-row${v===maxVal?' max-stat':''}"><span class="stat-label">${s.toUpperCase()}</span><span style="width:22px">${v}</span><div class="stat-bar-bg"><div class="stat-bar-fill ${tier}" style="width:${w}%"></div></div></div>`;
     }).join('');
-
-    const statsHidden = displayToggles.stats ? '' : ' hidden';
-    return `<div class="card" data-id="${p.id}" onclick="handleCardClick(this,${p.id})">
+    const sH=displayToggles.stats?'':' hidden';
+    const eH=displayToggles.evo?'':' hidden';
+    const evoHTML=buildEvoChainHTML(p.id);
+    const click=clickable?`onclick="handleCardClick(this,${p.id})"`:'';
+    return `<div class="card" data-id="${p.id}" ${click}>
+        ${clickable?'<span class="team-count-badge">0</span>':''}
         <span class="id-badge">#${String(p.id).padStart(3,'0')}</span>
-        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png" alt="${p.name}">
-        <div class="card-header">
-            <span class="card-name">${p.name}</span>
-            <div class="type-box">${p.types.map(t=>`<span class="type-pill" style="background:${typeColors[t]}">${t}</span>`).join('')}</div>
-        </div>
-        <div class="section-stats${statsHidden}">
-            <div class="stats-box">${statsHTML}</div>
-            <div class="card-total">TOTAL: ${p.total}</div>
-        </div>
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png" alt="${p.name}" loading="lazy">
+        <div class="card-header"><span class="card-name">${p.name}</span>
+        <div class="type-box">${p.types.map(t=>`<span class="type-pill" style="background:${typeColors[t]}">${t}</span>`).join('')}</div></div>
+        <div class="section-stats${sH}"><div class="stats-box">${statsHTML}</div><div class="card-total">TOTAL: ${p.total}</div></div>
+        ${evoHTML?`<div class="section-evo${eH}">${evoHTML}</div>`:''}
     </div>`;
 }
 
-function updateSortUI() {
-    document.querySelectorAll('.btn-sort').forEach(btn => {
-        const s = activeSorts.find(as => as.stat === btn.dataset.stat);
-        if(s) {
-            btn.classList.add('active');
-            btn.innerHTML = `${s.stat.toUpperCase()} ${s.dir==='desc'?'▼':'▲'} <span style="background:var(--pk-red);color:white;border-radius:10px;padding:0 4px;font-size:0.6rem">${activeSorts.indexOf(s)+1}</span>`;
-        } else {
-            btn.classList.remove('active');
-            btn.innerHTML = btn.dataset.stat.toUpperCase();
-        }
+function updateSortUI(){
+    document.querySelectorAll('.btn-sort').forEach(btn=>{
+        const s=activeSorts.find(x=>x.stat===btn.dataset.stat);
+        if(s){btn.classList.add('active');btn.innerHTML=`${s.stat.toUpperCase()} ${s.dir==='desc'?'&#9660;':'&#9650;'} <span style="background:var(--pk-red);color:white;border-radius:10px;padding:0 4px;font-size:0.6rem">${activeSorts.indexOf(s)+1}</span>`;}
+        else{btn.classList.remove('active');btn.innerHTML=btn.dataset.stat.toUpperCase();}
     });
 }
 
-// ===== INIT =====
-function init() {
-    const filterContainer = document.getElementById('type-filters');
-    Object.keys(typeColors).forEach(type => {
-        const span = document.createElement('span');
-        span.className = 'type-pill';
-        span.style.backgroundColor = typeColors[type];
-        span.innerText = type;
-        span.onclick = () => toggleFilter(type, span);
-        filterContainer.insertBefore(span, filterContainer.lastElementChild);
+function init(){
+    const fc=document.getElementById('type-filters');
+    Object.keys(typeColors).forEach(type=>{
+        const s=document.createElement('span');
+        s.className='type-pill'; s.style.backgroundColor=typeColors[type]; s.innerText=type;
+        s.onclick=()=>toggleFilter(type,s);
+        fc.insertBefore(s,fc.lastElementChild);
     });
-
-    const sortContainer = document.getElementById('sort-btns');
-    ['id','hp','atk','def','spa','spd','spe','total'].forEach(s => {
-        const btn = document.createElement('button');
-        btn.className = 'btn-sort';
-        btn.dataset.stat = s;
-        btn.innerText = s.toUpperCase();
-        btn.onclick = () => handleSort(s);
-        sortContainer.appendChild(btn);
+    const sc=document.getElementById('sort-btns');
+    ['id','hp','atk','def','spa','spd','spe','total'].forEach(s=>{
+        const b=document.createElement('button');
+        b.className='btn-sort'; b.dataset.stat=s; b.innerText=s.toUpperCase();
+        b.onclick=()=>handleSort(s); sc.appendChild(b);
     });
-
-    addTeamRow();
-    render();
+    addTeamRow(); render();
 }
-
 init();
 </script>
 </body>
