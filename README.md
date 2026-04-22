@@ -1,9 +1,9 @@
 # 🛡️ Pokemon Team Builder (FireRed/LeafGreen)
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://nishimotord.github.io/pokemon-team-builder/)
 
-> A lightweight team-building dashboard designed for Pokémon Gen3 /  FireRed / LeafGreen with a focus on the Kanto Region.  Made using Gemeni (V1), and Claude (V2). 
+> A lightweight team-building dashboard designed for Pokémon Gen3 /  FireRed / LeafGreen with a focus on the Kanto Region.  Made using Gemeni (V1), and Claude (V2+). 
 
-📚 Sources & Credits
+Sources & Credits
 This project was built using data aggregated from the following community resources:
 
 PokéAPI: For the base Pokémon stats and type information.
@@ -11,6 +11,13 @@ PokéAPI: For the base Pokémon stats and type information.
 Serebii.net: For verification of Gen 3 (FireRed/LeafGreen) specific movesets and mechanics.
 
 Pokémon Showdown: For logic regarding type effectiveness and damage multipliers.
+
+Inspiration and references - check them out
+
+https://game8.co/games/Pokemon-FireRed-LeafGreen/archives/582178
+
+https://veekun.com/dex/gadgets/compare_pokemon?version_group=7
+
 
 ⚖️ Legal Disclaimer
 This is a non-commercial, fan-made project created for educational and entertainment purposes only.
