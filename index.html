@@ -12,7 +12,7 @@
     }
     body.dark-mode { --bg: #1a1a1a; --card-bg: #2d2d2d; --text: #f0f0f0; --border: #444; }
     * { box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 12px; transition: background 0.3s, color 0.3s; margin: 0; overflow-x: hidden; }
+    body { font-family: "Segoe UI", sans-serif; background: var(--bg); color: var(--text); padding: 12px; transition: background 0.3s, color 0.3s; margin: 0; overflow-x: hidden; }
     .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; }
     .drawer-overlay.open { display: block; }
@@ -24,11 +24,7 @@
         box-shadow: -4px 0 24px rgba(0,0,0,0.35);
     }
     .team-drawer.open { right: 0; }
-    .drawer-header {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 14px 16px; border-bottom: 2px solid var(--border);
-        background: var(--pk-blue); color: white; flex-shrink: 0;
-    }
+    .drawer-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 2px solid var(--border); background: var(--pk-blue); color: white; flex-shrink: 0; }
     .drawer-header h2 { margin: 0; font-size: 1rem; }
     .drawer-body { flex: 1; overflow-y: auto; padding: 12px; }
     .drawer-footer { padding: 10px 12px; border-top: 2px solid var(--border); flex-shrink: 0; }
@@ -36,38 +32,16 @@
     .team-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .team-name-input { background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--text); font-weight: bold; font-size: 0.9rem; width: 170px; outline: none; padding: 2px 4px; }
     .team-slots { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .slot {
-        background: rgba(0,0,0,0.05); border: 2px dashed var(--border);
-        border-radius: 10px; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; position: relative; overflow: hidden;
-        transition: border-color 0.2s, background 0.2s; min-height: 80px;
-    }
-    .slot.empty-slot::after { content: '+'; font-size: 1.8rem; opacity: 0.2; pointer-events: none; }
+    .slot { background: rgba(0,0,0,0.05); border: 2px dashed var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; transition: border-color 0.2s, background 0.2s; min-height: 80px; }
+    .slot.empty-slot::after { content: "+"; font-size: 1.8rem; opacity: 0.2; pointer-events: none; }
     .slot.empty-slot:hover { border-color: var(--pk-blue); background: rgba(59,76,202,0.08); }
     .slot .card { width: 100%; margin: 0; border: none; border-radius: 8px; cursor: default; padding: 8px; }
     .slot .card:active { transform: none; }
-    .slot-remove-btn {
-        position: absolute; top: 4px; right: 4px; z-index: 10;
-        background: var(--pk-red); color: white; border: none; border-radius: 50%;
-        width: 18px; height: 18px; font-size: 0.7rem; cursor: pointer;
-        display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1;
-    }
-    .fab-team {
-        position: fixed; bottom: 20px; right: 20px; z-index: 150;
-        background: var(--pk-blue); color: var(--pk-yellow);
-        border: 3px solid var(--pk-yellow); border-radius: 50px;
-        padding: 10px 18px; font-weight: bold; font-size: 0.9rem;
-        cursor: pointer; box-shadow: 0 4px 15px rgba(59,76,202,0.5);
-        display: flex; align-items: center; gap: 8px;
-        -webkit-tap-highlight-color: transparent; user-select: none; transition: transform 0.15s;
-    }
+    .slot-remove-btn { position: absolute; top: 4px; right: 4px; z-index: 10; background: var(--pk-red); color: white; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1; }
+    .fab-team { position: fixed; bottom: 20px; right: 20px; z-index: 150; background: var(--pk-blue); color: var(--pk-yellow); border: 3px solid var(--pk-yellow); border-radius: 50px; padding: 10px 18px; font-weight: bold; font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 15px rgba(59,76,202,0.5); display: flex; align-items: center; gap: 8px; -webkit-tap-highlight-color: transparent; user-select: none; transition: transform 0.15s; }
     .fab-team:active { transform: scale(0.95); }
     .fab-badge { background: var(--pk-red); color: white; border-radius: 10px; padding: 1px 7px; font-size: 0.7rem; min-width: 20px; text-align: center; }
-    .controls {
-        background: var(--card-bg); padding: 12px; border-radius: 12px; margin-bottom: 12px;
-        position: sticky; top: 0; z-index: 100; border: 1px solid var(--border);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
+    .controls { background: var(--card-bg); padding: 12px; border-radius: 12px; margin-bottom: 12px; position: sticky; top: 0; z-index: 100; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     .filter-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
     .filter-row:last-child { margin-bottom: 0; }
     .filter-row strong { font-size: 0.8rem; white-space: nowrap; }
@@ -77,23 +51,36 @@
     .active { background: var(--pk-blue) !important; color: white !important; border-color: var(--pk-blue) !important; }
     .btn-display.active { background: #27ae60 !important; border-color: #27ae60 !important; color: white !important; }
     .btn-display.coming-soon { border-style: dashed; opacity: 0.55; cursor: default; }
-    #main-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px; padding: 4px; padding-bottom: 80px; }
+
+    /* Card grid - wide enough for 3-stage evo chain on one line (~220px min) */
+    #main-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; padding: 4px; padding-bottom: 80px; }
+
+    /* Base card */
     .card { padding: 10px; display: flex; flex-direction: column; position: relative; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transition: transform 0.12s; }
     .card:active { transform: scale(0.97); }
     .card.in-team { border-color: var(--pk-yellow); box-shadow: 0 0 0 2px var(--pk-yellow); }
-    .team-count-badge {
-        display: none; position: absolute; top: 4px; right: 4px;
-        background: var(--pk-red); color: white; border-radius: 50%;
-        width: 20px; height: 20px; font-size: 0.65rem; font-weight: bold;
-        align-items: center; justify-content: center; z-index: 5;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.4);
-    }
+
+    /* Version-exclusive glows — subtle inner shadow on card border */
+    .card.fr-exclusive { border-color: #e05555; box-shadow: 0 0 0 2px rgba(204,60,60,0.35), inset 0 0 12px rgba(204,60,60,0.08); }
+    .card.lg-exclusive { border-color: #4a9e5c; box-shadow: 0 0 0 2px rgba(60,160,80,0.35), inset 0 0 12px rgba(60,160,80,0.08); }
+    /* in-team overrides version color but keeps the glow subtle underneath */
+    .card.in-team.fr-exclusive { border-color: var(--pk-yellow); box-shadow: 0 0 0 2px var(--pk-yellow), 0 0 8px rgba(204,60,60,0.3); }
+    .card.in-team.lg-exclusive { border-color: var(--pk-yellow); box-shadow: 0 0 0 2px var(--pk-yellow), 0 0 8px rgba(60,160,80,0.3); }
+
+    /* Version badge */
+    .ver-badge { position: absolute; top: 4px; left: 4px; font-size: 0.5rem; font-weight: bold; padding: 1px 4px; border-radius: 3px; letter-spacing: 0.02em; z-index: 4; }
+    .ver-badge.fr { background: rgba(204,60,60,0.8); color: white; }
+    .ver-badge.lg { background: rgba(60,160,80,0.8); color: white; }
+
+    .team-count-badge { display: none; position: absolute; top: 4px; right: 4px; background: var(--pk-red); color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.65rem; font-weight: bold; align-items: center; justify-content: center; z-index: 5; box-shadow: 0 1px 4px rgba(0,0,0,0.4); }
     .card.in-team .team-count-badge { display: flex; }
     .id-badge { display: block; text-align: center; font-size: 0.7rem; opacity: 0.55; font-family: monospace; }
     .card img { width: 72px; height: 72px; image-rendering: pixelated; margin: 0 auto; display: block; }
     .card-header { text-align: center; margin: 6px 0; }
     .card-name { text-transform: capitalize; font-size: 0.88rem; font-weight: bold; }
     .type-box { display: flex; justify-content: center; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+
+    /* Stats */
     .section-stats.hidden { display: none; }
     .stats-box { background: rgba(0,0,0,0.08); border-radius: 5px; padding: 7px; display: flex; flex-direction: column; gap: 3px; font-family: monospace; font-size: 0.68rem; }
     .stat-row { display: flex; align-items: center; gap: 6px; border-radius: 2px; }
@@ -104,25 +91,35 @@
     .stat-row.max-stat { outline: 2px solid #000; outline-offset: 1px; background: rgba(255,255,255,0.1); }
     body.dark-mode .stat-row.max-stat { outline-color: #fff; background: rgba(255,255,255,0.15); }
     .card-total { text-align: center; font-size: 0.75rem; font-weight: bold; margin-top: 6px; opacity: 0.85; }
+
+    /* Evolution */
     .section-evo.hidden { display: none; }
-    .evo-chain {
-        margin-top: 6px; background: rgba(0,0,0,0.06); border-radius: 6px;
-        padding: 6px 4px; display: flex; align-items: center; justify-content: center;
-        flex-wrap: wrap; gap: 2px;
-    }
+    .evo-chain { margin-top: 6px; background: rgba(0,0,0,0.06); border-radius: 6px; padding: 5px 4px; display: flex; align-items: center; justify-content: center; flex-wrap: nowrap; gap: 1px; overflow-x: auto; }
     .evo-node { display: flex; flex-direction: column; align-items: center; gap: 1px; flex-shrink: 0; }
-    .evo-node img { width: 40px; height: 40px; image-rendering: pixelated; }
-    .evo-node .evo-name { font-size: 0.52rem; text-transform: capitalize; text-align: center; font-weight: bold; opacity: 0.85; }
-    .evo-node .evo-num { font-size: 0.45rem; opacity: 0.5; font-family: monospace; }
+    .evo-node img { width: 38px; height: 38px; image-rendering: pixelated; }
+    .evo-node .evo-name { font-size: 0.5rem; text-transform: capitalize; text-align: center; font-weight: bold; opacity: 0.85; max-width: 44px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .evo-node .evo-num { font-size: 0.44rem; opacity: 0.5; font-family: monospace; }
     .evo-node.current-mon img { filter: drop-shadow(0 0 3px var(--pk-yellow)); }
-    .evo-arrow { display: flex; flex-direction: column; align-items: center; font-size: 0.85rem; padding: 0 2px; flex-shrink: 0; line-height: 1; }
-    .evo-arrow-label { font-size: 0.42rem; text-align: center; opacity: 0.7; max-width: 36px; line-height: 1.2; }
+    .evo-arrow { display: flex; flex-direction: column; align-items: center; font-size: 0.8rem; padding: 0 1px; flex-shrink: 0; line-height: 1; }
+    .evo-arrow-label { font-size: 0.4rem; text-align: center; opacity: 0.7; max-width: 34px; line-height: 1.2; white-space: nowrap; }
+
+    /* Moves */
+    .section-moves.hidden { display: none; }
+    .moves-table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 0.68rem; font-family: monospace; }
+    .moves-table caption { text-align: left; font-size: 0.62rem; font-weight: bold; opacity: 0.6; padding-bottom: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .moves-table th { background: rgba(0,0,0,0.12); padding: 3px 5px; text-align: left; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border); }
+    .moves-table td { padding: 2px 5px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+    .moves-table tr:last-child td { border-bottom: none; }
+    .moves-table td:first-child { width: 36px; opacity: 0.65; font-weight: bold; text-align: right; padding-right: 8px; }
+    .moves-table tr:nth-child(even) td { background: rgba(0,0,0,0.04); }
+
+    /* Banner / misc */
     .select-banner { display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 300; background: var(--pk-blue); color: white; text-align: center; padding: 10px; font-weight: bold; font-size: 0.9rem; }
     .select-banner.show { display: block; }
     .select-banner button { background: var(--pk-red); color: white; border: none; border-radius: 4px; padding: 4px 10px; margin-left: 10px; cursor: pointer; font-weight: bold; }
     .delete-row-btn { background: none; border: none; color: var(--pk-red); font-size: 1rem; cursor: pointer; padding: 2px 6px; }
-    @media (max-width: 480px) {
-        #main-list { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+    @media (max-width: 520px) {
+        #main-list { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
         body { padding: 8px; }
         :root { --drawer-width: 100vw; }
     }
@@ -131,12 +128,12 @@
     </style>
 </head>
 <body class="dark-mode">
-<div class="select-banner" id="select-banner">Tap a Pokémon to fill the slot <button onclick="cancelSelectingSlot()">Cancel</button></div>
+<div class="select-banner" id="select-banner">Tap a Pok&#233;mon to fill the slot <button onclick="cancelSelectingSlot()">Cancel</button></div>
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 <div class="team-drawer" id="team-drawer">
     <div class="drawer-header">
-        <h2>🏆 My Teams</h2>
-        <button onclick="closeDrawer()" style="background:none;border:none;color:white;font-size:1.3rem;cursor:pointer;line-height:1">✕</button>
+        <h2>&#127942; My Teams</h2>
+        <button onclick="closeDrawer()" style="background:none;border:none;color:white;font-size:1.3rem;cursor:pointer;line-height:1">&#10005;</button>
     </div>
     <div class="drawer-body" id="teams-list"></div>
     <div class="drawer-footer">
@@ -144,8 +141,8 @@
     </div>
 </div>
 <div class="header-row">
-    <strong style="font-size:1rem">🌿 LG Strategizer</strong>
-    <button class="toggle-btn" onclick="document.body.classList.toggle('dark-mode')">🌓</button>
+    <strong style="font-size:1rem">&#127807; LG Strategizer</strong>
+    <button class="toggle-btn" onclick="document.body.classList.toggle('dark-mode')">&#127763;</button>
 </div>
 <div class="controls">
     <div class="filter-row" id="type-filters">
@@ -163,21 +160,27 @@
     </div>
     <div class="filter-row">
         <strong>Show:</strong>
-        <button class="btn-display active" id="toggle-stats" onclick="toggleDisplay('stats')">📊 Stats</button>
-        <button class="btn-display active" id="toggle-evo" onclick="toggleDisplay('evo')">🔀 Evolution</button>
-        <button class="btn-display coming-soon" title="Coming soon" disabled>🥊 Moves</button>
-        <button class="btn-display coming-soon" title="Coming soon" disabled>⚡ Type Chart</button>
+        <button class="btn-display active" id="toggle-stats" onclick="toggleDisplay('stats')">&#128202; Stats</button>
+        <button class="btn-display active" id="toggle-evo" onclick="toggleDisplay('evo')">&#128260; Evolution</button>
+        <button class="btn-display active" id="toggle-moves" onclick="toggleDisplay('moves')">&#129354; Moves</button>
+        <button class="btn-display coming-soon" title="Coming soon" disabled>&#9889; Type Chart</button>
     </div>
 </div>
 <div id="main-list"></div>
-<button class="fab-team" onclick="openDrawer()">🏆 Teams <span class="fab-badge" id="team-count">0</span></button>
+<button class="fab-team" onclick="openDrawer()">&#127942; Teams <span class="fab-badge" id="team-count">0</span></button>
 <script>
+
 const typeColors = {
-    normal:'#A8A878', fire:'#F08030', water:'#6890F0', grass:'#78C850',
-    electric:'#F8D030', ice:'#98D8D8', fighting:'#C03028', poison:'#A040A0',
-    ground:'#E0C068', flying:'#A890F0', psychic:'#F85888', bug:'#A8B020',
-    rock:'#B8A038', ghost:'#705898', dragon:'#7038F8', steel:'#B8B8D0'
+    normal:'#A8A878',fire:'#F08030',water:'#6890F0',grass:'#78C850',
+    electric:'#F8D030',ice:'#98D8D8',fighting:'#C03028',poison:'#A040A0',
+    ground:'#E0C068',flying:'#A890F0',psychic:'#F85888',bug:'#A8B020',
+    rock:'#B8A038',ghost:'#705898',dragon:'#7038F8',steel:'#B8B8D0'
 };
+
+// Version exclusives
+// FR = FireRed only, LG = LeafGreen only
+const frExclusive = new Set([23,24,58,59,83,106,107,111,112,123,125,126,145]);
+const lgExclusive = new Set([29,30,31,60,61,62,84,85,108,114,115,116,117,124,144]);
 
 const pokemonData = [
     {id:1,name:"bulbasaur",types:["grass","poison"],hp:45,atk:49,def:49,spa:65,spd:65,spe:45,total:318},
@@ -333,9 +336,163 @@ const pokemonData = [
     {id:151,name:"mew",types:["psychic"],hp:100,atk:100,def:100,spa:100,spd:100,spe:100,total:600}
 ];
 
-// Evolution chains. Each chain = ordered array of stages.
-// stage.trigger describes what causes evolution TO the NEXT stage.
-// {type:'level',lvl:N} | {type:'stone',stone:'...'} | {type:'trade'} | {type:'friendship'}
+// Level-up movesets: {id: [[lvl, "Move Name"], ...]} sorted by lvl asc
+// FRLG level-up moves (level-up only, ordered ascending)
+const movesets = {
+1:[[1,"Tackle"],[1,"Growl"],[7,"Leech Seed"],[13,"Vine Whip"],[20,"Poison Powder"],[22,"Sleep Powder"],[29,"Razor Leaf"],[38,"Sweet Scent"],[46,"Growth"],[50,"Synthesis"],[59,"SolarBeam"]],
+2:[[1,"Tackle"],[1,"Growl"],[1,"Leech Seed"],[7,"Leech Seed"],[13,"Vine Whip"],[20,"Poison Powder"],[22,"Sleep Powder"],[29,"Razor Leaf"],[38,"Sweet Scent"],[46,"Growth"],[50,"Synthesis"],[59,"SolarBeam"]],
+3:[[1,"Tackle"],[1,"Growl"],[1,"Leech Seed"],[1,"Vine Whip"],[7,"Leech Seed"],[13,"Vine Whip"],[20,"Poison Powder"],[22,"Sleep Powder"],[29,"Razor Leaf"],[38,"Sweet Scent"],[46,"Growth"],[50,"Synthesis"],[59,"SolarBeam"]],
+4:[[1,"Scratch"],[1,"Growl"],[7,"Ember"],[13,"Smokescreen"],[19,"Scratch"],[25,"Slash"],[31,"Flamethrower"],[37,"Fire Spin"]],
+5:[[1,"Scratch"],[1,"Growl"],[7,"Ember"],[13,"Smokescreen"],[20,"Scratch"],[27,"Slash"],[34,"Flamethrower"],[41,"Fire Spin"]],
+6:[[1,"Scratch"],[1,"Growl"],[1,"Ember"],[7,"Ember"],[13,"Smokescreen"],[20,"Scratch"],[27,"Slash"],[34,"Flamethrower"],[41,"Fire Spin"]],
+7:[[1,"Tackle"],[1,"Tail Whip"],[7,"Bubble"],[13,"Withdraw"],[19,"Water Gun"],[25,"Bite"],[31,"Rapid Spin"],[37,"Protect"],[43,"Rain Dance"],[49,"Skull Bash"],[55,"Hydro Pump"]],
+8:[[1,"Tackle"],[1,"Tail Whip"],[7,"Bubble"],[13,"Withdraw"],[20,"Water Gun"],[27,"Bite"],[34,"Rapid Spin"],[41,"Protect"],[48,"Rain Dance"],[55,"Skull Bash"],[62,"Hydro Pump"]],
+9:[[1,"Tackle"],[1,"Tail Whip"],[1,"Bubble"],[1,"Withdraw"],[7,"Bubble"],[13,"Withdraw"],[20,"Water Gun"],[27,"Bite"],[34,"Rapid Spin"],[41,"Protect"],[48,"Rain Dance"],[55,"Skull Bash"],[62,"Hydro Pump"]],
+10:[[1,"Tackle"],[1,"String Shot"],[7,"Bug Bite"]],
+11:[[1,"Harden"]],
+12:[[1,"Confusion"],[1,"Poison Powder"],[1,"Stun Spore"],[10,"Supersonic"],[13,"Whirlwind"],[18,"Gust"],[26,"Psybeam"],[32,"Silver Wind"],[40,"Light Screen"],[46,"Safeguard"]],
+13:[[1,"Poison Sting"],[1,"String Shot"],[7,"Bug Bite"]],
+14:[[1,"Harden"],[1,"Poison Sting"]],
+15:[[1,"Fury Attack"],[1,"Poison Sting"],[1,"String Shot"],[20,"Twineedle"],[25,"Pin Missile"],[30,"Agility"],[35,"Slash"]],
+16:[[1,"Tackle"],[1,"Sand Attack"],[9,"Gust"],[14,"Quick Attack"],[23,"Whirlwind"],[28,"Wing Attack"],[36,"Agility"],[42,"Mirror Move"]],
+17:[[1,"Tackle"],[1,"Sand Attack"],[9,"Gust"],[14,"Quick Attack"],[23,"Whirlwind"],[28,"Wing Attack"],[38,"Agility"],[44,"Mirror Move"]],
+18:[[1,"Tackle"],[1,"Sand Attack"],[1,"Gust"],[1,"Quick Attack"],[9,"Gust"],[14,"Quick Attack"],[23,"Whirlwind"],[28,"Wing Attack"],[38,"Agility"],[44,"Mirror Move"]],
+19:[[1,"Tackle"],[1,"Tail Whip"],[7,"Quick Attack"],[14,"Hyper Fang"],[23,"Scary Face"],[34,"Pursuit"]],
+20:[[1,"Tackle"],[1,"Tail Whip"],[7,"Quick Attack"],[14,"Hyper Fang"],[24,"Scary Face"],[33,"Pursuit"],[41,"Super Fang"]],
+21:[[1,"Peck"],[1,"Growl"],[9,"Leer"],[17,"Fury Attack"],[25,"Mirror Move"],[33,"Drill Peck"]],
+22:[[1,"Peck"],[1,"Growl"],[9,"Leer"],[17,"Fury Attack"],[28,"Mirror Move"],[39,"Drill Peck"]],
+23:[[1,"Wrap"],[1,"Leer"],[9,"Poison Sting"],[17,"Bite"],[25,"Glare"],[33,"Screech"],[41,"Acid"]],
+24:[[1,"Wrap"],[1,"Leer"],[9,"Poison Sting"],[17,"Bite"],[27,"Glare"],[36,"Screech"],[47,"Acid"]],
+25:[[1,"Thundershock"],[1,"Growl"],[9,"Tail Whip"],[13,"Thunder Wave"],[18,"Quick Attack"],[26,"Double Team"],[33,"Slam"],[41,"Thunderbolt"],[49,"Agility"],[61,"Thunder"]],
+26:[[1,"Thundershock"],[1,"Tail Whip"],[1,"Thunder Wave"],[1,"Quick Attack"]],
+27:[[1,"Scratch"],[1,"Defense Curl"],[11,"Sand Attack"],[17,"Poison Sting"],[23,"Slash"],[31,"Swift"],[39,"Fury Swipes"]],
+28:[[1,"Scratch"],[1,"Defense Curl"],[11,"Sand Attack"],[17,"Poison Sting"],[25,"Slash"],[34,"Swift"],[43,"Fury Swipes"]],
+29:[[1,"Growl"],[1,"Scratch"],[8,"Tail Whip"],[12,"Double Kick"],[17,"Poison Sting"],[23,"Bite"],[30,"Fury Swipes"],[38,"Flatter"]],
+30:[[1,"Growl"],[1,"Scratch"],[1,"Tail Whip"],[8,"Tail Whip"],[12,"Double Kick"],[17,"Poison Sting"],[23,"Bite"],[32,"Fury Swipes"],[41,"Flatter"]],
+31:[[1,"Scratch"],[1,"Tail Whip"],[1,"Double Kick"],[1,"Poison Sting"],[12,"Double Kick"],[17,"Poison Sting"],[23,"Bite"],[32,"Fury Swipes"],[41,"Flatter"],[53,"Crunch"]],
+32:[[1,"Leer"],[1,"Peck"],[8,"Focus Energy"],[12,"Double Kick"],[17,"Poison Sting"],[23,"Horn Attack"],[30,"Fury Attack"],[38,"Flatter"]],
+33:[[1,"Leer"],[1,"Peck"],[1,"Focus Energy"],[8,"Focus Energy"],[12,"Double Kick"],[17,"Poison Sting"],[23,"Horn Attack"],[32,"Fury Attack"],[41,"Flatter"]],
+34:[[1,"Peck"],[1,"Focus Energy"],[1,"Double Kick"],[1,"Poison Sting"],[12,"Double Kick"],[17,"Poison Sting"],[23,"Horn Attack"],[32,"Fury Attack"],[41,"Flatter"],[53,"Megahorn"]],
+35:[[1,"Pound"],[1,"Growl"],[5,"Encore"],[9,"Sing"],[13,"Double Slap"],[17,"Minimize"],[21,"Metronome"],[25,"Defense Curl"],[29,"Soft-Boiled"],[33,"Body Slam"],[37,"Mimic"],[41,"Double-Edge"],[45,"Light Screen"]],
+36:[[1,"Pound"],[1,"Growl"],[1,"Sing"],[1,"Double Slap"]],
+37:[[1,"Ember"],[1,"Tail Whip"],[7,"Roar"],[13,"Quick Attack"],[19,"Will-O-Wisp"],[25,"Confuse Ray"],[31,"Imprison"],[37,"Flamethrower"],[43,"Safeguard"]],
+38:[[1,"Ember"],[1,"Tail Whip"],[1,"Roar"],[1,"Quick Attack"]],
+39:[[1,"Sing"],[1,"Defense Curl"],[5,"Pound"],[9,"Disable"],[13,"Defense Curl"],[17,"DoubleSlap"],[21,"Rest"],[25,"Body Slam"],[29,"Mimic"],[33,"Hyper Voice"],[37,"Double-Edge"]],
+40:[[1,"Sing"],[1,"Defense Curl"],[1,"Pound"],[1,"Disable"]],
+41:[[1,"Absorb"],[1,"Supersonic"],[9,"Astonish"],[17,"Bite"],[25,"Wing Attack"],[33,"Confuse Ray"],[41,"Air Cutter"],[49,"Mean Look"],[57,"Leech Life"]],
+42:[[1,"Absorb"],[1,"Supersonic"],[9,"Astonish"],[17,"Bite"],[28,"Wing Attack"],[37,"Confuse Ray"],[48,"Air Cutter"],[57,"Mean Look"],[66,"Leech Life"]],
+43:[[1,"Absorb"],[1,"Sweet Scent"],[9,"Acid"],[15,"PoisonPowder"],[19,"Sleep Powder"],[27,"Stun Spore"],[33,"Moonlight"],[39,"Petal Dance"],[45,"Sunny Day"]],
+44:[[1,"Absorb"],[1,"Sweet Scent"],[9,"Acid"],[15,"PoisonPowder"],[19,"Sleep Powder"],[28,"Stun Spore"],[35,"Moonlight"],[44,"Petal Dance"],[53,"Sunny Day"]],
+45:[[1,"Absorb"],[1,"Sweet Scent"],[9,"Acid"],[15,"PoisonPowder"],[19,"Sleep Powder"],[28,"Stun Spore"],[35,"Moonlight"],[44,"Petal Dance"],[53,"Sunny Day"]],
+46:[[1,"Scratch"],[1,"Stun Spore"],[1,"Leech Life"],[7,"Poison Powder"],[13,"Leech Life"],[19,"Spore"],[25,"Slash"],[31,"Growth"],[37,"Giga Drain"],[43,"Aromatherapy"]],
+47:[[1,"Scratch"],[1,"Stun Spore"],[1,"Leech Life"],[1,"Spore"],[7,"Poison Powder"],[13,"Leech Life"],[19,"Spore"],[25,"Slash"],[31,"Growth"],[37,"Giga Drain"],[43,"Aromatherapy"]],
+48:[[1,"Tackle"],[1,"Disable"],[9,"Foresight"],[17,"Supersonic"],[25,"Confusion"],[33,"Sleep Powder"],[41,"Psybeam"],[53,"Stun Spore"],[57,"Psych Up"],[61,"Signal Beam"]],
+49:[[1,"Tackle"],[1,"Disable"],[9,"Foresight"],[17,"Supersonic"],[25,"Confusion"],[33,"Sleep Powder"],[42,"Psybeam"],[54,"Stun Spore"],[58,"Psych Up"],[62,"Signal Beam"]],
+50:[[1,"Scratch"],[1,"Sand Attack"],[15,"Growl"],[17,"Astonish"],[22,"Magnitude"],[28,"Fury Swipes"],[35,"Mud Bomb"],[42,"Earth Power"],[49,"Earthquake"],[50,"Fissure"]],
+51:[[1,"Scratch"],[1,"Sand Attack"],[1,"Growl"],[1,"Astonish"],[15,"Growl"],[17,"Astonish"],[22,"Magnitude"],[28,"Fury Swipes"],[35,"Mud Bomb"],[42,"Earth Power"],[49,"Earthquake"],[50,"Fissure"]],
+52:[[1,"Scratch"],[1,"Growl"],[9,"Bite"],[15,"Fake Out"],[21,"Fury Swipes"],[27,"Screech"],[33,"Slash"],[39,"Taunt"],[45,"Pay Day"]],
+53:[[1,"Scratch"],[1,"Growl"],[9,"Bite"],[15,"Fake Out"],[21,"Fury Swipes"],[27,"Screech"],[35,"Slash"],[42,"Taunt"],[49,"Pay Day"],[50,"Nasty Plot"]],
+54:[[1,"Scratch"],[1,"Tail Whip"],[9,"Disable"],[15,"Confusion"],[20,"Water Gun"],[27,"Fury Swipes"],[33,"Screech"],[40,"Psych Up"],[46,"Amnesia"],[50,"Zen Headbutt"]],
+55:[[1,"Scratch"],[1,"Tail Whip"],[9,"Disable"],[15,"Confusion"],[20,"Water Gun"],[28,"Fury Swipes"],[34,"Screech"],[40,"Psych Up"],[48,"Amnesia"],[54,"Zen Headbutt"]],
+56:[[1,"Scratch"],[1,"Leer"],[9,"Low Kick"],[17,"Karate Chop"],[25,"Focus Energy"],[33,"Seismic Toss"],[41,"Screech"],[49,"Cross Chop"],[57,"Thrash"],[65,"Close Combat"]],
+57:[[1,"Scratch"],[1,"Leer"],[9,"Low Kick"],[17,"Karate Chop"],[25,"Focus Energy"],[33,"Seismic Toss"],[43,"Screech"],[53,"Cross Chop"],[63,"Thrash"],[73,"Close Combat"]],
+58:[[1,"Bite"],[1,"Roar"],[7,"Ember"],[19,"Leer"],[25,"Odor Sleuth"],[31,"Take Down"],[39,"Flame Wheel"],[45,"Agility"],[50,"Flamethrower"]],
+59:[[1,"Bite"],[1,"Roar"],[1,"Ember"],[1,"Odor Sleuth"]],
+60:[[1,"Water Gun"],[1,"Hypnosis"],[11,"Bubble"],[17,"Double Slap"],[21,"Rain Dance"],[31,"Body Slam"],[38,"Belly Drum"],[45,"Hydro Pump"],[52,"Water Sport"]],
+61:[[1,"Water Gun"],[1,"Hypnosis"],[1,"Bubble"],[1,"Double Slap"],[11,"Bubble"],[17,"Double Slap"],[21,"Rain Dance"],[33,"Body Slam"],[40,"Belly Drum"],[49,"Hydro Pump"],[58,"Water Sport"]],
+62:[[1,"Water Gun"],[1,"Hypnosis"],[1,"Double Slap"],[1,"Rain Dance"],[11,"Bubble"],[17,"Double Slap"],[21,"Rain Dance"],[33,"Body Slam"],[40,"Belly Drum"],[49,"Hydro Pump"],[58,"Water Sport"]],
+63:[[1,"Teleport"]],
+64:[[1,"Teleport"],[16,"Kinesis"],[18,"Confusion"],[21,"Disable"],[23,"Psybeam"],[25,"Recover"],[33,"Reflect"],[38,"Future Sight"],[43,"Calm Mind"],[48,"Psychic"],[53,"Trick"]],
+65:[[1,"Teleport"],[1,"Kinesis"],[1,"Confusion"],[1,"Disable"],[16,"Kinesis"],[18,"Confusion"],[21,"Disable"],[23,"Psybeam"],[25,"Recover"],[33,"Reflect"],[38,"Future Sight"],[43,"Calm Mind"],[48,"Psychic"],[53,"Trick"]],
+66:[[1,"Low Kick"],[1,"Leer"],[7,"Focus Energy"],[13,"Karate Chop"],[19,"Seismic Toss"],[25,"Foresight"],[31,"Cross Chop"],[37,"Scary Face"],[43,"DynamicPunch"],[49,"Earthquake"]],
+67:[[1,"Low Kick"],[1,"Leer"],[7,"Focus Energy"],[13,"Karate Chop"],[19,"Seismic Toss"],[25,"Foresight"],[31,"Cross Chop"],[38,"Scary Face"],[45,"DynamicPunch"],[52,"Earthquake"]],
+68:[[1,"Low Kick"],[1,"Leer"],[1,"Focus Energy"],[1,"Karate Chop"],[7,"Focus Energy"],[13,"Karate Chop"],[19,"Seismic Toss"],[25,"Foresight"],[31,"Cross Chop"],[38,"Scary Face"],[45,"DynamicPunch"],[52,"Earthquake"]],
+69:[[1,"Vine Whip"],[1,"Growth"],[7,"Wrap"],[13,"Sleep Powder"],[19,"PoisonPowder"],[26,"Stun Spore"],[33,"Acid"],[39,"Sweet Scent"],[45,"Razor Leaf"],[51,"Slam"],[57,"Gastro Acid"]],
+70:[[1,"Vine Whip"],[1,"Growth"],[1,"Wrap"],[1,"Sleep Powder"],[7,"Wrap"],[13,"Sleep Powder"],[19,"PoisonPowder"],[27,"Stun Spore"],[34,"Acid"],[41,"Razor Leaf"],[48,"Slam"],[54,"Gastro Acid"]],
+71:[[1,"Vine Whip"],[1,"Growth"],[1,"Wrap"],[1,"Sleep Powder"],[7,"Wrap"],[13,"Sleep Powder"],[19,"PoisonPowder"],[27,"Stun Spore"],[34,"Acid"],[41,"Razor Leaf"],[48,"Slam"],[54,"Gastro Acid"]],
+72:[[1,"Poison Sting"],[1,"Supersonic"],[7,"Constrict"],[13,"Acid"],[18,"Bubblebeam"],[22,"Wrap"],[27,"Barrier"],[33,"Water Pulse"],[40,"Screech"],[48,"Hydro Pump"],[54,"Swords Dance"]],
+73:[[1,"Poison Sting"],[1,"Supersonic"],[1,"Constrict"],[7,"Constrict"],[13,"Acid"],[18,"Bubblebeam"],[22,"Wrap"],[30,"Barrier"],[38,"Water Pulse"],[47,"Screech"],[57,"Hydro Pump"],[65,"Swords Dance"]],
+74:[[1,"Tackle"],[1,"Defense Curl"],[11,"Rock Throw"],[16,"Magnitude"],[21,"Selfdestruct"],[26,"Rock Blast"],[31,"Rollout"],[36,"Rock Polish"],[41,"Earthquake"],[46,"Explosion"],[51,"Double-Edge"],[56,"Stone Edge"]],
+75:[[1,"Tackle"],[1,"Defense Curl"],[11,"Rock Throw"],[16,"Magnitude"],[21,"Selfdestruct"],[26,"Rock Blast"],[31,"Rollout"],[36,"Rock Polish"],[41,"Earthquake"],[46,"Explosion"],[51,"Double-Edge"],[56,"Stone Edge"]],
+76:[[1,"Tackle"],[1,"Defense Curl"],[1,"Rock Throw"],[1,"Magnitude"],[11,"Rock Throw"],[16,"Magnitude"],[21,"Selfdestruct"],[26,"Rock Blast"],[31,"Rollout"],[36,"Rock Polish"],[41,"Earthquake"],[46,"Explosion"],[51,"Double-Edge"],[56,"Stone Edge"]],
+77:[[1,"Tackle"],[1,"Growl"],[7,"Tail Whip"],[13,"Ember"],[19,"Stomp"],[27,"Fire Spin"],[33,"Take Down"],[39,"Agility"],[45,"Flamethrower"],[53,"Bounce"]],
+78:[[1,"Tackle"],[1,"Growl"],[1,"Tail Whip"],[1,"Ember"],[7,"Tail Whip"],[13,"Ember"],[19,"Stomp"],[27,"Fire Spin"],[33,"Take Down"],[40,"Agility"],[47,"Flamethrower"],[55,"Bounce"]],
+79:[[1,"Curse"],[1,"Yawn"],[1,"Tackle"],[6,"Growl"],[15,"Water Gun"],[20,"Confusion"],[29,"Disable"],[33,"Headbutt"],[37,"Amnesia"],[42,"Zen Headbutt"],[46,"Slack Off"],[50,"Psychic"]],
+80:[[1,"Curse"],[1,"Yawn"],[1,"Tackle"],[1,"Growl"],[6,"Growl"],[15,"Water Gun"],[20,"Confusion"],[29,"Disable"],[33,"Headbutt"],[37,"Amnesia"],[42,"Zen Headbutt"],[46,"Slack Off"],[50,"Psychic"]],
+81:[[1,"Metal Sound"],[1,"Tackle"],[6,"ThunderShock"],[11,"Supersonic"],[16,"SonicBoom"],[21,"Spark"],[26,"Lock-On"],[31,"Magnet Bomb"],[38,"Screech"],[45,"Zap Cannon"]],
+82:[[1,"Metal Sound"],[1,"Tackle"],[1,"ThunderShock"],[1,"Supersonic"],[6,"ThunderShock"],[11,"Supersonic"],[16,"SonicBoom"],[21,"Spark"],[26,"Lock-On"],[31,"Magnet Bomb"],[38,"Screech"],[45,"Zap Cannon"]],
+83:[[1,"Peck"],[1,"Sand Attack"],[7,"Fury Cutter"],[13,"Knock Off"],[17,"Aerial Ace"],[21,"Slash"],[27,"Air Cutter"],[31,"Swords Dance"]],
+84:[[1,"Peck"],[1,"Growl"],[9,"Pursuit"],[16,"Fury Attack"],[22,"Pluck"],[30,"Agility"],[38,"Drill Peck"],[46,"Tri Attack"]],
+85:[[1,"Peck"],[1,"Growl"],[9,"Pursuit"],[16,"Fury Attack"],[22,"Pluck"],[32,"Agility"],[41,"Drill Peck"],[51,"Tri Attack"]],
+86:[[1,"Headbutt"],[1,"Growl"],[7,"Icy Wind"],[13,"Encore"],[19,"Ice Shard"],[25,"Rest"],[33,"Take Down"],[41,"Ice Beam"],[49,"Safeguard"],[57,"Aqua Jet"]],
+87:[[1,"Headbutt"],[1,"Growl"],[1,"Icy Wind"],[1,"Encore"],[7,"Icy Wind"],[13,"Encore"],[19,"Ice Shard"],[25,"Rest"],[35,"Take Down"],[45,"Ice Beam"],[55,"Safeguard"],[65,"Aqua Jet"]],
+88:[[1,"Pound"],[1,"Harden"],[6,"Disable"],[11,"Poison Gas"],[16,"Minimize"],[21,"Sludge"],[26,"Screech"],[31,"Sludge Bomb"],[36,"Acid Armor"],[41,"Memento"]],
+89:[[1,"Pound"],[1,"Harden"],[1,"Disable"],[1,"Poison Gas"],[6,"Disable"],[11,"Poison Gas"],[16,"Minimize"],[21,"Sludge"],[26,"Screech"],[31,"Sludge Bomb"],[36,"Acid Armor"],[41,"Memento"]],
+90:[[1,"Tackle"],[1,"Withdraw"],[9,"Icicle Spear"],[14,"Supersonic"],[19,"Aurora Beam"],[24,"Protect"],[31,"Leer"],[38,"Clamp"],[43,"Ice Shard"],[50,"Brine"]],
+91:[[1,"Tackle"],[1,"Withdraw"],[1,"Supersonic"],[1,"Protect"],[9,"Icicle Spear"],[14,"Supersonic"],[19,"Aurora Beam"],[24,"Protect"],[31,"Leer"],[38,"Clamp"],[43,"Ice Shard"],[50,"Brine"],[55,"Ice Beam"]],
+92:[[1,"Lick"],[1,"Spite"],[8,"Mean Look"],[15,"Curse"],[22,"Night Shade"],[29,"Confuse Ray"],[38,"Sucker Punch"],[45,"Payback"],[54,"Shadow Ball"]],
+93:[[1,"Lick"],[1,"Spite"],[8,"Mean Look"],[15,"Curse"],[22,"Night Shade"],[29,"Confuse Ray"],[40,"Sucker Punch"],[49,"Payback"],[60,"Shadow Ball"]],
+94:[[1,"Lick"],[1,"Spite"],[1,"Mean Look"],[1,"Curse"],[8,"Mean Look"],[15,"Curse"],[22,"Night Shade"],[29,"Confuse Ray"],[40,"Sucker Punch"],[49,"Payback"],[60,"Shadow Ball"]],
+95:[[1,"Tackle"],[1,"Screech"],[9,"Rock Throw"],[17,"Harden"],[25,"Bind"],[33,"Curse"],[41,"Rock Blast"],[49,"Slam"],[57,"Rock Polish"],[65,"Stone Edge"]],
+96:[[1,"Pound"],[1,"Hypnosis"],[11,"Disable"],[17,"Confusion"],[23,"Headbutt"],[29,"Poison Gas"],[35,"Psybeam"],[41,"Psych Up"],[47,"Swagger"],[53,"Future Sight"],[59,"Psychic"],[65,"Meditate"]],
+97:[[1,"Pound"],[1,"Hypnosis"],[1,"Disable"],[1,"Confusion"],[11,"Disable"],[17,"Confusion"],[23,"Headbutt"],[29,"Poison Gas"],[35,"Psybeam"],[43,"Psych Up"],[51,"Swagger"],[59,"Future Sight"],[67,"Psychic"],[75,"Meditate"]],
+98:[[1,"Bubble"],[1,"Leer"],[15,"Vice Grip"],[25,"Harden"],[31,"Stomp"],[38,"Protect"],[47,"Guillotine"],[56,"Crabhammer"]],
+99:[[1,"Bubble"],[1,"Leer"],[1,"Vice Grip"],[1,"Harden"],[15,"Vice Grip"],[25,"Harden"],[31,"Stomp"],[38,"Protect"],[47,"Guillotine"],[56,"Crabhammer"]],
+100:[[1,"Charge"],[1,"Tackle"],[9,"SonicBoom"],[17,"Spark"],[21,"Rollout"],[25,"Screech"],[29,"Light Screen"],[33,"Charge Beam"],[41,"Selfdestruct"],[49,"Mirror Coat"],[57,"Explosion"]],
+101:[[1,"Charge"],[1,"Tackle"],[1,"SonicBoom"],[1,"Spark"],[9,"SonicBoom"],[17,"Spark"],[21,"Rollout"],[25,"Screech"],[29,"Light Screen"],[33,"Charge Beam"],[41,"Selfdestruct"],[49,"Mirror Coat"],[57,"Explosion"]],
+102:[[1,"Barrage"],[1,"Uproar"],[7,"Hypnosis"],[13,"Reflect"],[19,"Leech Seed"],[25,"Bullet Seed"],[31,"Stun Spore"],[37,"PoisonPowder"],[43,"Sleep Powder"],[49,"Solar Beam"],[55,"Worry Seed"]],
+103:[[1,"Barrage"],[1,"Uproar"],[1,"Hypnosis"],[1,"Reflect"],[7,"Hypnosis"],[13,"Reflect"],[19,"Leech Seed"],[25,"Bullet Seed"],[31,"Stun Spore"],[37,"PoisonPowder"],[43,"Sleep Powder"],[49,"Solar Beam"],[55,"Worry Seed"]],
+104:[[1,"Growl"],[1,"Tail Whip"],[9,"Bone Club"],[15,"Headbutt"],[21,"Leer"],[27,"Focus Energy"],[33,"Thrash"],[39,"Bonemerang"],[45,"Rage"],[51,"False Swipe"],[57,"Swords Dance"],[63,"Bone Rush"]],
+105:[[1,"Growl"],[1,"Tail Whip"],[1,"Bone Club"],[1,"Headbutt"],[9,"Bone Club"],[15,"Headbutt"],[21,"Leer"],[27,"Focus Energy"],[33,"Thrash"],[39,"Bonemerang"],[45,"Rage"],[51,"False Swipe"],[57,"Swords Dance"],[63,"Bone Rush"]],
+106:[[1,"Revenge"],[1,"Double Kick"],[6,"Meditate"],[11,"Rolling Kick"],[16,"Jump Kick"],[21,"Brick Break"],[26,"Focus Energy"],[31,"High Jump Kick"],[36,"Mind Reader"],[41,"Foresight"],[46,"Blaze Kick"],[51,"Endure"],[56,"Mega Kick"]],
+107:[[1,"Revenge"],[1,"Comet Punch"],[6,"Agility"],[11,"Pursuit"],[16,"Mach Punch"],[21,"Bullet Punch"],[26,"Fire Punch"],[26,"Ice Punch"],[26,"ThunderPunch"],[31,"Sky Uppercut"],[36,"Focus Punch"],[41,"Detect"],[46,"Counter"],[51,"Close Combat"],[56,"Mega Punch"]],
+108:[[1,"Wrap"],[1,"Supersonic"],[7,"Stomp"],[13,"Disable"],[19,"Defense Curl"],[25,"Slam"],[31,"Screech"],[37,"Refresh"],[43,"Lick"],[49,"Rollout"]],
+109:[[1,"Tackle"],[1,"Smog"],[9,"Smokescreen"],[17,"Selfdestruct"],[25,"Sludge"],[33,"Haze"],[41,"Gyro Ball"],[49,"Explosion"],[57,"Destiny Bond"],[65,"Memento"]],
+110:[[1,"Tackle"],[1,"Smog"],[1,"Smokescreen"],[1,"Selfdestruct"],[9,"Smokescreen"],[17,"Selfdestruct"],[25,"Sludge"],[33,"Haze"],[41,"Gyro Ball"],[49,"Explosion"],[57,"Destiny Bond"],[65,"Memento"]],
+111:[[1,"Horn Attack"],[1,"Tail Whip"],[8,"Stomp"],[13,"Fury Attack"],[20,"Scary Face"],[25,"Rock Blast"],[32,"Horn Drill"],[38,"Take Down"],[45,"Stone Edge"],[50,"Earthquake"],[58,"Megahorn"]],
+112:[[1,"Horn Attack"],[1,"Tail Whip"],[1,"Stomp"],[1,"Fury Attack"],[8,"Stomp"],[13,"Fury Attack"],[20,"Scary Face"],[25,"Rock Blast"],[32,"Horn Drill"],[38,"Take Down"],[45,"Stone Edge"],[50,"Earthquake"],[58,"Megahorn"]],
+113:[[1,"Pound"],[1,"Growl"],[5,"Tail Whip"],[9,"Refresh"],[13,"Softboiled"],[17,"Double Slap"],[23,"Minimize"],[29,"Sing"],[33,"Egg Bomb"],[39,"Defense Curl"],[45,"Light Screen"],[51,"Double-Edge"],[57,"Healing Wish"]],
+114:[[1,"Constrict"],[1,"Sleep Powder"],[10,"Absorb"],[15,"PoisonPowder"],[19,"Vine Whip"],[25,"Bind"],[29,"Growth"],[35,"Mega Drain"],[41,"Knock Off"],[45,"Slam"],[50,"Tickle"],[55,"Wring Out"]],
+115:[[1,"Comet Punch"],[1,"Leer"],[7,"Fake Out"],[13,"Bite"],[19,"Tail Whip"],[25,"Mega Punch"],[31,"Disable"],[37,"Faint Attack"],[43,"Reversal"],[49,"Sucker Punch"]],
+116:[[1,"Bubble"],[1,"Smokescreen"],[12,"Leer"],[19,"Water Gun"],[24,"Focus Energy"],[30,"Bubblebeam"],[37,"Agility"],[43,"Dragon Dance"],[50,"Hydro Pump"]],
+117:[[1,"Bubble"],[1,"Smokescreen"],[1,"Leer"],[1,"Water Gun"],[12,"Leer"],[19,"Water Gun"],[24,"Focus Energy"],[31,"Bubblebeam"],[38,"Agility"],[46,"Dragon Dance"],[53,"Hydro Pump"]],
+118:[[1,"Peck"],[1,"Tail Whip"],[9,"Water Sport"],[19,"Supersonic"],[24,"Horn Attack"],[30,"Flail"],[38,"Aqua Ring"],[44,"Fury Attack"],[52,"Waterfall"],[56,"Horn Drill"],[60,"Agility"]],
+119:[[1,"Peck"],[1,"Tail Whip"],[1,"Water Sport"],[1,"Supersonic"],[9,"Water Sport"],[19,"Supersonic"],[24,"Horn Attack"],[30,"Flail"],[38,"Aqua Ring"],[44,"Fury Attack"],[52,"Waterfall"],[56,"Horn Drill"],[60,"Agility"]],
+120:[[1,"Tackle"],[1,"Harden"],[17,"Water Gun"],[22,"Rapid Spin"],[27,"Recover"],[32,"Psywave"],[37,"Swift"],[42,"Bubblebeam"],[47,"Minimize"],[52,"Light Screen"],[57,"Cosmic Power"],[62,"Hydro Pump"]],
+121:[[1,"Tackle"],[1,"Harden"],[1,"Water Gun"],[1,"Rapid Spin"],[17,"Water Gun"],[22,"Rapid Spin"],[27,"Recover"],[32,"Psywave"],[37,"Swift"],[42,"Bubblebeam"],[47,"Minimize"],[52,"Light Screen"],[57,"Cosmic Power"],[62,"Hydro Pump"]],
+122:[[1,"Barrier"],[1,"Confusion"],[4,"DoubleSlap"],[9,"Mimic"],[12,"Meditate"],[17,"Encore"],[20,"Psybeam"],[25,"Substitute"],[28,"Reflect"],[33,"Psych Up"],[36,"Trick"],[41,"Psychic"],[44,"Role Play"],[49,"Baton Pass"],[52,"Safeguard"]],
+123:[[1,"Vacuum Wave"],[1,"Quick Attack"],[6,"Leer"],[11,"Focus Energy"],[17,"Pursuit"],[23,"False Swipe"],[29,"Agility"],[35,"Wing Attack"],[41,"Slash"],[47,"Razor Wind"],[53,"Swords Dance"],[59,"Air Slash"]],
+124:[[1,"Pound"],[1,"Lick"],[1,"Lovely Kiss"],[9,"Powder Snow"],[11,"DoubleSlap"],[16,"Ice Punch"],[23,"Mean Look"],[28,"Fake Tears"],[35,"Blizzard"],[41,"Perish Song"],[48,"Psychic"]],
+125:[[1,"Quick Attack"],[1,"Leer"],[9,"ThunderPunch"],[17,"Low Kick"],[25,"Swift"],[33,"Shock Wave"],[41,"Thunder"],[49,"Light Screen"]],
+126:[[1,"Ember"],[1,"Leer"],[9,"SmogSmog"],[9,"Smog"],[17,"Fire Punch"],[25,"Smokescreen"],[33,"Sunny Day"],[41,"Flamethrower"],[49,"Fire Blast"]],
+127:[[1,"Vice Grip"],[1,"Focus Energy"],[9,"Bind"],[25,"Seismic Toss"],[33,"X-Scissor"],[41,"Harden"],[49,"Slash"],[57,"Guillotine"],[65,"Submission"]],
+128:[[1,"Tackle"],[1,"Tail Whip"],[4,"Stomp"],[9,"Rage"],[14,"Horn Attack"],[21,"Scary Face"],[29,"Pursuit"],[38,"Rest"],[48,"Payback"],[55,"Giga Impact"]],
+129:[[1,"Splash"],[15,"Tackle"],[30,"Flail"]],
+130:[[1,"Thrash"],[1,"Bite"],[20,"Dragon Rage"],[25,"Leer"],[30,"Twister"],[35,"Ice Fang"],[40,"Aqua Tail"],[45,"Rain Dance"],[50,"Hyper Beam"],[55,"Dragon Dance"],[60,"Hydro Pump"]],
+131:[[1,"Water Gun"],[1,"Growl"],[7,"Sing"],[13,"Mist"],[18,"Body Slam"],[23,"Rain Dance"],[28,"Safeguard"],[33,"Ice Shard"],[38,"Perish Song"],[43,"Blizzard"],[48,"Sheer Cold"]],
+132:[[1,"Transform"]],
+133:[[1,"Tackle"],[1,"Tail Whip"],[8,"Sand Attack"],[15,"Growl"],[22,"Quick Attack"],[29,"Bite"]],
+134:[[1,"Tackle"],[1,"Tail Whip"],[1,"Sand Attack"],[1,"Water Gun"],[8,"Sand Attack"],[15,"Growl"],[22,"Quick Attack"],[29,"Bite"],[36,"Water Pulse"],[43,"Aurora Beam"],[50,"Last Resort"],[57,"Hydro Pump"]],
+135:[[1,"Tackle"],[1,"Tail Whip"],[1,"Sand Attack"],[1,"ThunderShock"],[8,"Sand Attack"],[15,"Growl"],[22,"Quick Attack"],[29,"Bite"],[36,"Thunder Wave"],[43,"Agility"],[50,"Last Resort"],[57,"Thunder"]],
+136:[[1,"Tackle"],[1,"Tail Whip"],[1,"Sand Attack"],[1,"Ember"],[8,"Sand Attack"],[15,"Growl"],[22,"Quick Attack"],[29,"Bite"],[36,"Fire Spin"],[43,"Scary Face"],[50,"Last Resort"],[57,"Flamethrower"]],
+137:[[1,"Tackle"],[1,"Conversion"],[12,"Psybeam"],[18,"Agility"],[24,"Recover"],[30,"Sharpen"],[36,"Lock-On"],[42,"Tri Attack"],[48,"Magic Coat"],[54,"Zap Cannon"],[60,"Hyper Beam"]],
+138:[[1,"Constrict"],[1,"Withdraw"],[7,"Bite"],[13,"Water Gun"],[19,"Rollout"],[25,"Leer"],[31,"Ancient Power"],[37,"Protect"],[43,"Brine"],[49,"Muddy Water"],[55,"Hydro Pump"]],
+139:[[1,"Constrict"],[1,"Withdraw"],[1,"Bite"],[1,"Water Gun"],[7,"Bite"],[13,"Water Gun"],[19,"Rollout"],[25,"Leer"],[31,"Ancient Power"],[37,"Protect"],[43,"Brine"],[49,"Muddy Water"],[55,"Hydro Pump"],[61,"Spike Cannon"]],
+140:[[1,"Scratch"],[1,"Harden"],[7,"Absorb"],[13,"Leer"],[19,"Mud Shot"],[25,"Sand Attack"],[31,"Ancient Power"],[37,"Aqua Jet"],[43,"Mega Drain"],[49,"Metal Sound"],[55,"Rain Dance"],[61,"X-Scissor"]],
+141:[[1,"Scratch"],[1,"Harden"],[1,"Absorb"],[1,"Leer"],[7,"Absorb"],[13,"Leer"],[19,"Mud Shot"],[25,"Sand Attack"],[31,"Ancient Power"],[37,"Aqua Jet"],[43,"Mega Drain"],[49,"Metal Sound"],[55,"Rain Dance"],[61,"X-Scissor"],[67,"Night Slash"],[73,"Slash"]],
+142:[[1,"Bite"],[1,"Wing Attack"],[1,"Ancient Power"],[1,"Supersonic"],[9,"Bite"],[17,"Ancient Power"],[25,"Wing Attack"],[33,"Supersonic"],[41,"Dragon Breath"],[49,"Scary Face"],[57,"Crunch"],[65,"Rock Slide"],[73,"Giga Impact"]],
+143:[[1,"Tackle"],[1,"Defense Curl"],[1,"Amnesia"],[1,"Lick"],[9,"Rest"],[17,"Belly Drum"],[25,"Yawn"],[33,"Block"],[41,"Rollout"],[49,"Body Slam"],[57,"Sleep Talk"],[65,"Crunch"]],
+144:[[1,"Gust"],[1,"Powder Snow"],[8,"Mist"],[15,"Ice Shard"],[22,"Mind Reader"],[29,"Ancient Power"],[36,"Agility"],[43,"Ice Beam"],[50,"Reflect"],[57,"Hail"],[64,"Blizzard"],[71,"Sheer Cold"]],
+145:[[1,"Peck"],[1,"ThunderShock"],[8,"Thunder Wave"],[15,"Detect"],[22,"Ancient Power"],[29,"Charge"],[36,"Agility"],[43,"Discharge"],[50,"Rain Dance"],[57,"Light Screen"],[64,"Thunder"],[71,"Drill Peck"]],
+146:[[1,"Wing Attack"],[1,"Ember"],[8,"Fire Spin"],[15,"Agility"],[22,"Ancient Power"],[29,"Safeguard"],[36,"Air Slash"],[43,"Sunny Day"],[50,"Flamethrower"],[57,"Reflect"],[64,"Fire Blast"],[71,"Sky Attack"]],
+147:[[1,"Wrap"],[1,"Leer"],[8,"ThunderWave"],[15,"Twister"],[22,"Dragon Rage"],[29,"Slam"],[36,"Agility"],[43,"Dragon Rush"],[50,"Safeguard"],[57,"Dragon Dance"],[64,"Outrage"],[71,"Hyper Beam"]],
+148:[[1,"Wrap"],[1,"Leer"],[1,"ThunderWave"],[1,"Twister"],[8,"ThunderWave"],[15,"Twister"],[22,"Dragon Rage"],[29,"Slam"],[36,"Agility"],[43,"Dragon Rush"],[50,"Safeguard"],[57,"Dragon Dance"],[64,"Outrage"],[71,"Hyper Beam"]],
+149:[[1,"Wrap"],[1,"Leer"],[1,"ThunderWave"],[1,"Twister"],[8,"ThunderWave"],[15,"Twister"],[22,"Dragon Rage"],[29,"Slam"],[36,"Agility"],[43,"Dragon Rush"],[50,"Safeguard"],[57,"Dragon Dance"],[64,"Outrage"],[71,"Hyper Beam"]],
+150:[[1,"Confusion"],[1,"Disable"],[63,"Psycho Cut"],[66,"Swift"],[72,"Future Sight"],[75,"Mist"],[78,"Psychic"],[81,"Amnesia"],[84,"Recover"],[87,"Guard Swap"],[90,"Power Swap"]],
+151:[[1,"Pound"],[1,"Transform"],[10,"Mega Punch"],[20,"Metronome"],[30,"Psychic"],[40,"Barrier"],[50,"Ancient Power"],[60,"Amnesia"],[70,"Me First"],[80,"Baton Pass"],[90,"Nasty Plot"],[100,"Aura Sphere"]]
+};
+
+// Evolution chains
 const evoChains = [
     [{id:1,trigger:{type:'level',lvl:16}},{id:2,trigger:{type:'level',lvl:32}},{id:3}],
     [{id:4,trigger:{type:'level',lvl:16}},{id:5,trigger:{type:'level',lvl:36}},{id:6}],
@@ -399,7 +556,6 @@ const evoChains = [
     [{id:144}],[{id:145}],[{id:146}],[{id:150}],[{id:151}]
 ];
 
-// Build reverse lookup: pokemonId -> list of chains containing it
 const evoChainsByPokemon = {};
 evoChains.forEach(chain => {
     chain.forEach(stage => {
@@ -410,7 +566,7 @@ evoChains.forEach(chain => {
 
 function triggerLabel(t) {
     if(!t) return '';
-    if(t.type==='level') return 'Lv.' + t.lvl;
+    if(t.type==='level') return 'Lv.'+t.lvl;
     if(t.type==='stone') return t.stone;
     if(t.type==='trade') return 'Trade';
     if(t.type==='friendship') return 'Friendship';
@@ -418,92 +574,78 @@ function triggerLabel(t) {
 }
 
 function buildEvoChainHTML(pokemonId) {
-    const chains = evoChainsByPokemon[pokemonId] || [];
-    const seen = new Set();
-    const unique = chains.filter(c => {
-        const key = c.map(s=>s.id).join('-');
-        if(seen.has(key)) return false;
-        seen.add(key); return true;
-    });
-    return unique.map(chain => {
-        if(chain.length <= 1) return '';
-        let html = '<div class="evo-chain">';
-        chain.forEach((stage, i) => {
-            const isCurrent = stage.id === pokemonId;
-            const pName = (pokemonData.find(p=>p.id===stage.id)||{name:'?'}).name;
-            html += `<div class="evo-node${isCurrent?' current-mon':''}">
+    const chains = evoChainsByPokemon[pokemonId]||[];
+    const seen=new Set();
+    const unique=chains.filter(c=>{const k=c.map(s=>s.id).join('-');if(seen.has(k))return false;seen.add(k);return true;});
+    return unique.map(chain=>{
+        if(chain.length<=1) return '';
+        let html='<div class="evo-chain">';
+        chain.forEach((stage,i)=>{
+            const isCur=stage.id===pokemonId;
+            const pName=(pokemonData.find(p=>p.id===stage.id)||{name:'?'}).name;
+            html+=`<div class="evo-node${isCur?' current-mon':''}">
                 <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${stage.id}.png" loading="lazy">
                 <span class="evo-name">${pName}</span>
                 <span class="evo-num">#${String(stage.id).padStart(3,'0')}</span>
             </div>`;
-            if(i < chain.length-1 && chain[i].trigger) {
-                html += `<div class="evo-arrow"><span>&#8594;</span><span class="evo-arrow-label">${triggerLabel(chain[i].trigger)}</span></div>`;
+            if(i<chain.length-1&&chain[i].trigger){
+                html+=`<div class="evo-arrow"><span>&#8594;</span><span class="evo-arrow-label">${triggerLabel(chain[i].trigger)}</span></div>`;
             }
         });
-        return html + '</div>';
+        return html+'</div>';
     }).join('');
 }
 
+function buildMovesHTML(pokemonId) {
+    const moves = movesets[pokemonId];
+    if(!moves||!moves.length) return '';
+    // Sort by level asc (data is already sorted, but just in case)
+    const sorted = [...moves].sort((a,b)=>a[0]-b[0]);
+    const rows = sorted.map(([lvl,name])=>`<tr><td>${lvl}</td><td>${name}</td></tr>`).join('');
+    return `<table class="moves-table">
+        <caption>Level-up Moves</caption>
+        <thead><tr><th>Lv</th><th>Move</th></tr></thead>
+        <tbody>${rows}</tbody>
+    </table>`;
+}
+
 // STATE
-let activeSorts = [], activeFilters = [], filterLogic = 'OR';
-let displayToggles = { stats: true, evo: true };
-let teams = [], teamIdCounter = 0, selectingSlot = null;
+let activeSorts=[],activeFilters=[],filterLogic='OR';
+let displayToggles={stats:true,evo:true,moves:true};
+let teams=[],teamIdCounter=0,selectingSlot=null;
 
 function toggleDisplay(section) {
-    displayToggles[section] = !displayToggles[section];
-    document.getElementById('toggle-'+section).classList.toggle('active', displayToggles[section]);
-    document.querySelectorAll('.section-'+section).forEach(el => el.classList.toggle('hidden', !displayToggles[section]));
+    displayToggles[section]=!displayToggles[section];
+    document.getElementById('toggle-'+section).classList.toggle('active',displayToggles[section]);
+    document.querySelectorAll('.section-'+section).forEach(el=>el.classList.toggle('hidden',!displayToggles[section]));
 }
 
-function addTeamRow() {
-    teams.push({id:++teamIdCounter, name:'Team '+teamIdCounter, slots:[null,null,null,null,null,null]});
-    renderTeams();
-}
-function removeTeam(id) { teams=teams.filter(t=>t.id!==id); renderTeams(); updateFABCount(); updateListHighlights(); }
-function renameTeam(id,name) { const t=teams.find(t=>t.id===id); if(t) t.name=name; }
-function removeFromSlot(tid,si,e) {
-    if(e) e.stopPropagation();
-    const t=teams.find(t=>t.id===tid);
-    if(t){t.slots[si]=null; renderTeams(); updateFABCount(); updateListHighlights();}
-}
-function addToSlot(tid,si,pid) {
-    const t=teams.find(t=>t.id===tid);
-    if(t){t.slots[si]=pid; renderTeams(); updateFABCount(); updateListHighlights();}
-}
-function startSelectingSlot(tid,si) {
-    selectingSlot={teamId:tid,slotIndex:si};
-    document.getElementById('select-banner').classList.add('show');
-    closeDrawer();
-}
-function cancelSelectingSlot() {
-    selectingSlot=null;
-    document.getElementById('select-banner').classList.remove('show');
-}
-function updateFABCount() {
-    document.getElementById('team-count').textContent = teams.reduce((n,t)=>n+t.slots.filter(s=>s!==null).length,0);
-}
-function countInTeams(pid) { return teams.reduce((n,t)=>n+t.slots.filter(s=>s===pid).length,0); }
-function updateListHighlights() {
-    document.querySelectorAll('#main-list .card').forEach(card => {
-        const id=parseInt(card.dataset.id), count=countInTeams(id);
-        card.classList.toggle('in-team', count>0);
-        const b=card.querySelector('.team-count-badge'); if(b) b.textContent=count;
+function addTeamRow(){teams.push({id:++teamIdCounter,name:'Team '+teamIdCounter,slots:[null,null,null,null,null,null]});renderTeams();}
+function removeTeam(id){teams=teams.filter(t=>t.id!==id);renderTeams();updateFABCount();updateListHighlights();}
+function renameTeam(id,name){const t=teams.find(t=>t.id===id);if(t)t.name=name;}
+function removeFromSlot(tid,si,e){if(e)e.stopPropagation();const t=teams.find(t=>t.id===tid);if(t){t.slots[si]=null;renderTeams();updateFABCount();updateListHighlights();}}
+function addToSlot(tid,si,pid){const t=teams.find(t=>t.id===tid);if(t){t.slots[si]=pid;renderTeams();updateFABCount();updateListHighlights();}}
+function startSelectingSlot(tid,si){selectingSlot={teamId:tid,slotIndex:si};document.getElementById('select-banner').classList.add('show');closeDrawer();}
+function cancelSelectingSlot(){selectingSlot=null;document.getElementById('select-banner').classList.remove('show');}
+function updateFABCount(){document.getElementById('team-count').textContent=teams.reduce((n,t)=>n+t.slots.filter(s=>s!==null).length,0);}
+function countInTeams(pid){return teams.reduce((n,t)=>n+t.slots.filter(s=>s===pid).length,0);}
+function updateListHighlights(){
+    document.querySelectorAll('#main-list .card').forEach(card=>{
+        const id=parseInt(card.dataset.id),count=countInTeams(id);
+        card.classList.toggle('in-team',count>0);
+        const b=card.querySelector('.team-count-badge');if(b)b.textContent=count;
     });
 }
 
-function renderTeams() {
+function renderTeams(){
     const container=document.getElementById('teams-list');
     container.innerHTML='';
-    if(!teams.length){
-        container.innerHTML='<p style="opacity:0.5;text-align:center;font-size:0.85rem;margin-top:30px">No teams yet.<br>Tap &quot;+ Add Team&quot; to get started.</p>';
-        return;
-    }
-    teams.forEach(team => {
-        const div=document.createElement('div');
-        div.className='team-container';
+    if(!teams.length){container.innerHTML='<p style="opacity:0.5;text-align:center;font-size:0.85rem;margin-top:30px">No teams yet.<br>Tap &quot;+ Add Team&quot; to get started.</p>';return;}
+    teams.forEach(team=>{
+        const div=document.createElement('div');div.className='team-container';
         let sh='';
-        team.slots.forEach((pid,si) => {
-            if(pid!==null) {
+        team.slots.forEach((pid,si)=>{
+            if(pid!==null){
                 const p=pokemonData.find(x=>x.id===pid);
                 sh+=`<div class="slot" style="border:none;background:none;cursor:default;padding:0;overflow:visible;min-height:auto">
                     <button class="slot-remove-btn" onclick="removeFromSlot(${team.id},${si},event)">&#215;</button>
@@ -524,50 +666,44 @@ function renderTeams() {
 function openDrawer(){document.getElementById('team-drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('open');}
 function closeDrawer(){document.getElementById('team-drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');}
 
-function handleCardClick(el,pid) {
+function handleCardClick(el,pid){
     if(selectingSlot){addToSlot(selectingSlot.teamId,selectingSlot.slotIndex,pid);cancelSelectingSlot();openDrawer();return;}
-    if(!teams.length) addTeamRow();
+    if(!teams.length)addTeamRow();
     for(const t of teams){const i=t.slots.indexOf(null);if(i!==-1){addToSlot(t.id,i,pid);return;}}
     openDrawer();
 }
 
-function toggleFilter(type,el){
-    if(activeFilters.includes(type)) activeFilters=activeFilters.filter(t=>t!==type); else activeFilters.push(type);
-    el.classList.toggle('active'); render();
-}
+function toggleFilter(type,el){if(activeFilters.includes(type))activeFilters=activeFilters.filter(t=>t!==type);else activeFilters.push(type);el.classList.toggle('active');render();}
 function resetFilters(){activeFilters=[];document.querySelectorAll('.type-pill').forEach(p=>p.classList.remove('active'));render();}
 function toggleLogic(){filterLogic=filterLogic==='OR'?'AND':'OR';document.getElementById('logic-toggle').innerText=filterLogic;render();}
-function handleSort(s){
-    const i=activeSorts.findIndex(x=>x.stat===s);
-    if(i===-1) activeSorts.push({stat:s,dir:'desc'});
-    else if(activeSorts[i].dir==='desc') activeSorts[i].dir='asc';
-    else activeSorts.splice(i,1);
-    render();
-}
+function handleSort(s){const i=activeSorts.findIndex(x=>x.stat===s);if(i===-1)activeSorts.push({stat:s,dir:'desc'});else if(activeSorts[i].dir==='desc')activeSorts[i].dir='asc';else activeSorts.splice(i,1);render();}
 function resetSort(){activeSorts=[];render();}
 
-function render() {
-    let data=pokemonData.filter(p=>{
-        if(!activeFilters.length) return true;
-        return filterLogic==='OR'?activeFilters.some(t=>p.types.includes(t)):activeFilters.every(t=>p.types.includes(t));
-    });
-    data.sort((a,b)=>{for(let s of activeSorts){if(a[s.stat]!==b[s.stat]) return s.dir==='desc'?b[s.stat]-a[s.stat]:a[s.stat]-b[s.stat];}return 0;});
+function render(){
+    let data=pokemonData.filter(p=>{if(!activeFilters.length)return true;return filterLogic==='OR'?activeFilters.some(t=>p.types.includes(t)):activeFilters.every(t=>p.types.includes(t));});
+    data.sort((a,b)=>{for(let s of activeSorts){if(a[s.stat]!==b[s.stat])return s.dir==='desc'?b[s.stat]-a[s.stat]:a[s.stat]-b[s.stat];}return 0;});
     document.getElementById('main-list').innerHTML=data.map(p=>createCardHTML(p,true)).join('');
-    updateSortUI(); updateListHighlights();
+    updateSortUI();updateListHighlights();
 }
 
-function createCardHTML(p, clickable=true) {
+function createCardHTML(p,clickable=true){
     const stats=['hp','atk','def','spa','spd','spe'];
     const maxVal=Math.max(...stats.map(s=>p[s]));
     const statsHTML=stats.map(s=>{
-        const v=p[s], w=Math.min((v/160)*100,100), tier=v<60?'bar-low':v>90?'bar-high':'bar-mid';
+        const v=p[s],w=Math.min((v/160)*100,100),tier=v<60?'bar-low':v>90?'bar-high':'bar-mid';
         return `<div class="stat-row${v===maxVal?' max-stat':''}"><span class="stat-label">${s.toUpperCase()}</span><span style="width:22px">${v}</span><div class="stat-bar-bg"><div class="stat-bar-fill ${tier}" style="width:${w}%"></div></div></div>`;
     }).join('');
     const sH=displayToggles.stats?'':' hidden';
     const eH=displayToggles.evo?'':' hidden';
+    const mH=displayToggles.moves?'':' hidden';
     const evoHTML=buildEvoChainHTML(p.id);
+    const movesHTML=buildMovesHTML(p.id);
     const click=clickable?`onclick="handleCardClick(this,${p.id})"`:'';
-    return `<div class="card" data-id="${p.id}" ${click}>
+    const isFR=frExclusive.has(p.id),isLG=lgExclusive.has(p.id);
+    const verClass=isFR?' fr-exclusive':isLG?' lg-exclusive':'';
+    const verBadge=isFR?'<span class="ver-badge fr">FR</span>':isLG?'<span class="ver-badge lg">LG</span>':'';
+    return `<div class="card${verClass}" data-id="${p.id}" ${click}>
+        ${verBadge}
         ${clickable?'<span class="team-count-badge">0</span>':''}
         <span class="id-badge">#${String(p.id).padStart(3,'0')}</span>
         <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png" alt="${p.name}" loading="lazy">
@@ -575,6 +711,7 @@ function createCardHTML(p, clickable=true) {
         <div class="type-box">${p.types.map(t=>`<span class="type-pill" style="background:${typeColors[t]}">${t}</span>`).join('')}</div></div>
         <div class="section-stats${sH}"><div class="stats-box">${statsHTML}</div><div class="card-total">TOTAL: ${p.total}</div></div>
         ${evoHTML?`<div class="section-evo${eH}">${evoHTML}</div>`:''}
+        ${movesHTML?`<div class="section-moves${mH}">${movesHTML}</div>`:''}
     </div>`;
 }
 
@@ -589,20 +726,16 @@ function updateSortUI(){
 function init(){
     const fc=document.getElementById('type-filters');
     Object.keys(typeColors).forEach(type=>{
-        const s=document.createElement('span');
-        s.className='type-pill'; s.style.backgroundColor=typeColors[type]; s.innerText=type;
-        s.onclick=()=>toggleFilter(type,s);
-        fc.insertBefore(s,fc.lastElementChild);
+        const s=document.createElement('span');s.className='type-pill';s.style.backgroundColor=typeColors[type];s.innerText=type;s.onclick=()=>toggleFilter(type,s);fc.insertBefore(s,fc.lastElementChild);
     });
     const sc=document.getElementById('sort-btns');
     ['id','hp','atk','def','spa','spd','spe','total'].forEach(s=>{
-        const b=document.createElement('button');
-        b.className='btn-sort'; b.dataset.stat=s; b.innerText=s.toUpperCase();
-        b.onclick=()=>handleSort(s); sc.appendChild(b);
+        const b=document.createElement('button');b.className='btn-sort';b.dataset.stat=s;b.innerText=s.toUpperCase();b.onclick=()=>handleSort(s);sc.appendChild(b);
     });
-    addTeamRow(); render();
+    addTeamRow();render();
 }
 init();
+
 </script>
 </body>
 </html>
