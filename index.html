@@ -14,33 +14,142 @@
     * { box-sizing: border-box; }
     body { font-family: "Segoe UI", sans-serif; background: var(--bg); color: var(--text); padding: 12px; transition: background 0.3s, color 0.3s; margin: 0; overflow-x: hidden; }
     .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; }
+    /* ── OVERLAY ── */
+    .drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; }
     .drawer-overlay.open { display: block; }
+
+    /* ── BOTTOM SHEET (desktop default) ── */
     .team-drawer {
-        position: fixed; top: 0; right: -100%; width: min(var(--drawer-width), 100vw);
-        height: 100%; background: var(--bg); z-index: 201;
-        transition: right 0.35s cubic-bezier(.4,0,.2,1);
+        position: fixed; left: 0; right: 0; bottom: -100%;
+        max-height: 55vh; min-height: 220px;
+        background: var(--bg); z-index: 201;
+        transition: bottom 0.35s cubic-bezier(.4,0,.2,1);
         display: flex; flex-direction: column;
-        box-shadow: -4px 0 24px rgba(0,0,0,0.35);
+        box-shadow: 0 -4px 24px rgba(0,0,0,0.35);
+        border-radius: 16px 16px 0 0;
     }
-    .team-drawer.open { right: 0; }
-    .drawer-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 2px solid var(--border); background: var(--pk-blue); color: white; flex-shrink: 0; }
-    .drawer-header h2 { margin: 0; font-size: 1rem; }
-    .drawer-body { flex: 1; overflow-y: auto; padding: 12px; }
-    .drawer-footer { padding: 10px 12px; border-top: 2px solid var(--border); flex-shrink: 0; }
-    .team-container { background: rgba(0,0,0,0.05); padding: 10px; border-radius: 12px; margin-bottom: 12px; border: 2px solid var(--border); }
-    .team-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .team-name-input { background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--text); font-weight: bold; font-size: 0.9rem; width: 170px; outline: none; padding: 2px 4px; }
-    .team-slots { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .slot { background: rgba(0,0,0,0.05); border: 2px dashed var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; transition: border-color 0.2s, background 0.2s; min-height: 80px; }
+    .team-drawer.open { bottom: 0; }
+
+    /* Header bar with pokeball + title + show toggles + close */
+    .drawer-header {
+        display: flex; align-items: center; gap: 10px;
+        padding: 10px 14px; border-bottom: 2px solid var(--border);
+        background: var(--pk-blue); color: white; flex-shrink: 0;
+        border-radius: 16px 16px 0 0;
+        flex-wrap: wrap;
+    }
+    .drawer-header-left { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .drawer-header-left h2 { margin: 0; font-size: 0.95rem; white-space: nowrap; }
+    .drawer-pokeball { width: 22px; height: 22px; image-rendering: pixelated; vertical-align: middle; }
+
+    /* Show toggles inside drawer header */
+    .drawer-show-row { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; justify-content: center; }
+    .drawer-show-btn {
+        padding: 3px 8px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.4);
+        background: rgba(255,255,255,0.15); color: white; cursor: pointer;
+        font-weight: bold; font-size: 0.65rem; white-space: nowrap;
+        transition: 0.15s; -webkit-tap-highlight-color: transparent;
+    }
+    .drawer-show-btn.dsb-active { background: #27ae60; border-color: #27ae60; }
+    .drawer-close-btn { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; line-height: 1; flex-shrink: 0; }
+
+    /* Scrollable body */
+    .drawer-body { flex: 1; overflow-y: auto; padding: 8px 10px; }
+
+    /* Footer */
+    .drawer-footer { padding: 6px 10px; border-top: 1px solid var(--border); flex-shrink: 0; }
+
+    /* ── TEAM CONTAINER ── */
+    .team-container {
+        background: rgba(0,0,0,0.05); padding: 6px 8px;
+        border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--border);
+    }
+    .team-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .team-name-input { background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--text); font-weight: bold; font-size: 0.85rem; width: 160px; outline: none; padding: 2px 4px; }
+
+    /* Horizontal 1-row layout for desktop bottom sheet */
+    .team-slots {
+        display: flex; flex-direction: row; gap: 6px;
+        overflow-x: auto; overflow-y: hidden;
+        padding-bottom: 4px; /* space for scrollbar */
+    }
+    .team-slots::-webkit-scrollbar { height: 3px; }
+    .team-slots::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* Each slot is a fixed-width mini card column */
+    .slot {
+        flex: 0 0 160px; /* fixed width, no grow/shrink */
+        background: rgba(0,0,0,0.05); border: 2px dashed var(--border);
+        border-radius: 8px; display: flex; align-items: flex-start; justify-content: center;
+        cursor: pointer; position: relative; overflow: visible;
+        transition: border-color 0.2s, background 0.2s;
+        min-height: 50px;
+    }
+    .slot.empty-slot { align-items: center; min-height: 100px; }
     .slot.empty-slot::after { content: "+"; font-size: 1.8rem; opacity: 0.2; pointer-events: none; }
     .slot.empty-slot:hover { border-color: var(--pk-blue); background: rgba(59,76,202,0.08); }
-    .slot .card { width: 100%; margin: 0; border: none; border-radius: 8px; cursor: default; padding: 8px; }
+
+    /* Cards inside slots inherit full width and lose outer border */
+    .slot .card {
+        width: 100%; margin: 0; border: none !important; box-shadow: none !important;
+        border-radius: 6px; cursor: default; padding: 6px;
+        font-size: 0.8em; /* scale text slightly */
+    }
     .slot .card:active { transform: none; }
-    .slot-remove-btn { position: absolute; top: 4px; right: 4px; z-index: 10; background: var(--pk-red); color: white; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1; }
-    .fab-team { position: fixed; bottom: 20px; right: 20px; z-index: 150; background: var(--pk-blue); color: var(--pk-yellow); border: 3px solid var(--pk-yellow); border-radius: 50px; padding: 10px 18px; font-weight: bold; font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 15px rgba(59,76,202,0.5); display: flex; align-items: center; gap: 8px; -webkit-tap-highlight-color: transparent; user-select: none; transition: transform 0.15s; }
+    .slot .card img { width: 56px; height: 56px; }
+    .slot .card .card-name { font-size: 0.78rem; }
+    .slot .card .type-pill { font-size: 0.55rem; padding: 2px 6px; }
+    .slot .card .stat-label { width: 24px; font-size: 0.62rem; }
+    .slot .card .stats-box { font-size: 0.62rem; padding: 5px; }
+    .slot .card .card-total { font-size: 0.68rem; }
+    .slot .card .evo-node img { width: 30px; height: 30px; }
+    .slot .card .evo-name { font-size: 0.48rem; max-width: 36px; }
+    .slot .card .evo-num { font-size: 0.4rem; }
+    .slot .card .evo-arrow-label { font-size: 0.4rem; }
+    .slot .card .moves-table { font-size: 0.58rem; }
+    .slot .card .tc-pill { font-size: 0.5rem; padding: 1px 4px; }
+    .slot .card .typechart-label { font-size: 0.5rem; }
+    .slot .card .tc-section-head { font-size: 0.5rem; }
+
+    /* Remove btn stays top-right */
+    .slot-remove-btn {
+        position: absolute; top: 3px; right: 3px; z-index: 10;
+        background: var(--pk-red); color: white; border: none; border-radius: 50%;
+        width: 16px; height: 16px; font-size: 0.65rem; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1;
+    }
+
+    /* FAB */
+    .fab-team {
+        position: fixed; bottom: 20px; right: 20px; z-index: 150;
+        background: var(--pk-blue); color: var(--pk-yellow);
+        border: 3px solid var(--pk-yellow); border-radius: 50px;
+        padding: 8px 16px; font-weight: bold; font-size: 0.9rem;
+        cursor: pointer; box-shadow: 0 4px 15px rgba(59,76,202,0.5);
+        display: flex; align-items: center; gap: 6px;
+        -webkit-tap-highlight-color: transparent; user-select: none; transition: transform 0.15s;
+    }
     .fab-team:active { transform: scale(0.95); }
+    .fab-pokeball { width: 20px; height: 20px; image-rendering: pixelated; }
     .fab-badge { background: var(--pk-red); color: white; border-radius: 10px; padding: 1px 7px; font-size: 0.7rem; min-width: 20px; text-align: center; }
+
+    /* ── MOBILE: right-side drawer ── */
+    @media (max-width: 768px) {
+        .team-drawer {
+            top: 0; bottom: unset; left: unset; right: -100%; width: min(340px, 100vw);
+            max-height: 100vh; height: 100%;
+            border-radius: 0; transition: right 0.35s cubic-bezier(.4,0,.2,1);
+            box-shadow: -4px 0 24px rgba(0,0,0,0.35);
+        }
+        .team-drawer.open { bottom: unset; right: 0; }
+        .drawer-header { border-radius: 0; }
+        /* Mobile slots stack vertically, fixed width to fit drawer */
+        .team-slots { flex-direction: column; overflow-x: hidden; overflow-y: visible; }
+        .slot { flex: none; width: 100%; min-height: 80px; }
+        .slot.empty-slot { min-height: 70px; }
+        .slot .card { font-size: 1em; }
+        .slot .card img { width: 64px; height: 64px; }
+    }
     .controls { background: var(--card-bg); padding: 12px; border-radius: 12px; margin-bottom: 12px; position: sticky; top: 0; z-index: 100; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     .filter-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
     .filter-row:last-child { margin-bottom: 0; }
@@ -121,7 +230,6 @@
     @media (max-width: 520px) {
         #main-list { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
         body { padding: 8px; }
-        :root { --drawer-width: 100vw; }
     }
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
@@ -146,8 +254,14 @@
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 <div class="team-drawer" id="team-drawer">
     <div class="drawer-header">
-        <h2>&#127942; My Teams</h2>
-        <button onclick="closeDrawer()" style="background:none;border:none;color:white;font-size:1.3rem;cursor:pointer;line-height:1">&#10005;</button>
+        <div class="drawer-header-left">
+            <img class="drawer-pokeball" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="pokeball">
+            <h2>My Teams</h2>
+        </div>
+        <div class="drawer-show-row" id="drawer-show-row">
+            <!-- populated by JS to mirror the Show buttons -->
+        </div>
+        <button class="drawer-close-btn" onclick="closeDrawer()">&#10005;</button>
     </div>
     <div class="drawer-body" id="teams-list"></div>
     <div class="drawer-footer">
@@ -181,7 +295,7 @@
     </div>
 </div>
 <div id="main-list"></div>
-<button class="fab-team" onclick="openDrawer()">&#127942; Teams <span class="fab-badge" id="team-count">0</span></button>
+<button class="fab-team" onclick="openDrawer()"><img class="fab-pokeball" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="pokeball"> Teams <span class="fab-badge" id="team-count">0</span></button>
 <script>
 
 const typeColors = {
@@ -723,8 +837,31 @@ let teams=[],teamIdCounter=0,selectingSlot=null;
 
 function toggleDisplay(section) {
     displayToggles[section]=!displayToggles[section];
-    document.getElementById('toggle-'+section).classList.toggle('active',displayToggles[section]);
-    document.querySelectorAll('.section-'+section).forEach(el=>el.classList.toggle('hidden',!displayToggles[section]));
+    const active = displayToggles[section];
+    document.getElementById('toggle-'+section).classList.toggle('active', active);
+    document.querySelectorAll('.section-'+section).forEach(el=>el.classList.toggle('hidden',!active));
+    // Mirror into drawer show row
+    const dsb = document.querySelector('.drawer-show-btn[data-section="'+section+'"]');
+    if(dsb) dsb.classList.toggle('dsb-active', active);
+}
+
+function initDrawerShowRow() {
+    const row = document.getElementById('drawer-show-row');
+    if(!row) return;
+    const showDefs = [
+        {section:'stats', label:'&#128202; Stats'},
+        {section:'evo',   label:'&#128260; Evo'},
+        {section:'moves', label:'&#129354; Moves'},
+        {section:'typechart', label:'&#9889; Types'}
+    ];
+    showDefs.forEach(d => {
+        const b = document.createElement('button');
+        b.className = 'drawer-show-btn' + (displayToggles[d.section] ? ' dsb-active' : '');
+        b.dataset.section = d.section;
+        b.innerHTML = d.label;
+        b.onclick = () => toggleDisplay(d.section);
+        row.appendChild(b);
+    });
 }
 
 function addTeamRow(){teams.push({id:++teamIdCounter,name:'Team '+teamIdCounter,slots:[null,null,null,null,null,null]});renderTeams();}
