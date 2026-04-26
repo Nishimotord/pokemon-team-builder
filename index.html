@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Leaf Green Strategizer</title>
+    <title>Pokemon Team Builder (FR/LG)</title>
     <style>
     :root {
         --bg: #f4f4f9; --card-bg: #ffffff; --text: #333; --border: #ddd;
@@ -96,12 +96,12 @@
     .section-evo.hidden { display: none; }
     .evo-chain { margin-top: 6px; background: rgba(0,0,0,0.06); border-radius: 6px; padding: 5px 4px; display: flex; align-items: center; justify-content: center; flex-wrap: nowrap; gap: 1px; overflow-x: auto; }
     .evo-node { display: flex; flex-direction: column; align-items: center; gap: 1px; flex-shrink: 0; }
-    .evo-node img { width: 38px; height: 38px; image-rendering: pixelated; }
-    .evo-node .evo-name { font-size: 0.5rem; text-transform: capitalize; text-align: center; font-weight: bold; opacity: 0.85; max-width: 44px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .evo-node .evo-num { font-size: 0.44rem; opacity: 0.5; font-family: monospace; }
+    .evo-node img { width: 42px; height: 42px; image-rendering: pixelated; }
+    .evo-node .evo-name { font-size: 0.6rem; text-transform: capitalize; text-align: center; font-weight: bold; opacity: 0.9; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .evo-node .evo-num { font-size: 0.52rem; opacity: 0.55; font-family: monospace; }
     .evo-node.current-mon img { filter: drop-shadow(0 0 3px var(--pk-yellow)); }
-    .evo-arrow { display: flex; flex-direction: column; align-items: center; font-size: 0.8rem; padding: 0 1px; flex-shrink: 0; line-height: 1; }
-    .evo-arrow-label { font-size: 0.4rem; text-align: center; opacity: 0.7; max-width: 34px; line-height: 1.2; white-space: nowrap; }
+    .evo-arrow { display: flex; flex-direction: column; align-items: center; font-size: 0.9rem; padding: 0 2px; flex-shrink: 0; line-height: 1; }
+    .evo-arrow-label { font-size: 0.52rem; text-align: center; opacity: 0.75; max-width: 40px; line-height: 1.2; white-space: nowrap; }
 
     /* Moves */
     .section-moves.hidden { display: none; }
@@ -125,6 +125,20 @@
     }
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* Type Chart */
+    .section-typechart.hidden { display: none; }
+    .typechart-wrap { margin-top: 6px; }
+    .typechart-label { font-size: 0.6rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.6; margin-bottom: 3px; }
+    .typechart-row { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 4px; }
+    .tc-pill {
+        display: inline-flex; align-items: center; gap: 3px;
+        padding: 2px 6px; border-radius: 4px; font-size: 0.58rem; font-weight: bold;
+        color: white; text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+        white-space: nowrap;
+    }
+    .tc-pill .tc-mult { font-size: 0.65rem; opacity: 0.9; }
+    .tc-section-head { font-size: 0.58rem; font-weight: bold; opacity: 0.55; margin-top: 4px; margin-bottom: 2px; letter-spacing: 0.03em; }
     </style>
 </head>
 <body class="dark-mode">
@@ -141,7 +155,7 @@
     </div>
 </div>
 <div class="header-row">
-    <strong style="font-size:1rem">&#127807; LG Strategizer</strong>
+    <strong style="font-size:1rem">&#128218; Pokemon Team Builder (FR/LG)</strong>
     <button class="toggle-btn" onclick="document.body.classList.toggle('dark-mode')">&#127763;</button>
 </div>
 <div class="controls">
@@ -163,7 +177,7 @@
         <button class="btn-display active" id="toggle-stats" onclick="toggleDisplay('stats')">&#128202; Stats</button>
         <button class="btn-display active" id="toggle-evo" onclick="toggleDisplay('evo')">&#128260; Evolution</button>
         <button class="btn-display active" id="toggle-moves" onclick="toggleDisplay('moves')">&#129354; Moves</button>
-        <button class="btn-display coming-soon" title="Coming soon" disabled>&#9889; Type Chart</button>
+        <button class="btn-display active" id="toggle-typechart" onclick="toggleDisplay('typechart')">&#9889; Type Chart</button>
     </div>
 </div>
 <div id="main-list"></div>
@@ -177,10 +191,11 @@ const typeColors = {
     rock:'#B8A038',ghost:'#705898',dragon:'#7038F8',steel:'#B8B8D0'
 };
 
-// Version exclusives
-// FR = FireRed only, LG = LeafGreen only
-const frExclusive = new Set([23,24,58,59,83,106,107,111,112,123,125,126,145]);
-const lgExclusive = new Set([29,30,31,60,61,62,84,85,108,114,115,116,117,124,144]);
+// Version exclusives (Gen 1 Pokemon only from pokemondb.net)
+// FireRed: Ekans,Arbok,Oddish,Gloom,Vileplume,Psyduck,Golduck,Growlithe,Arcanine,Shellder,Cloyster,Scyther,Electabuzz
+const frExclusive = new Set([23,24,43,44,45,54,55,58,59,90,91,123,125]);
+// LeafGreen: Sandshrew,Sandslash,Vulpix,Ninetales,Bellsprout,Weepinbell,Victreebel,Slowpoke,Slowbro,Staryu,Starmie,Magmar,Pinsir
+const lgExclusive = new Set([27,28,37,38,69,70,71,79,80,120,121,126,127]);
 
 const pokemonData = [
     {id:1,name:"bulbasaur",types:["grass","poison"],hp:45,atk:49,def:49,spa:65,spd:65,spe:45,total:318},
@@ -609,9 +624,101 @@ function buildMovesHTML(pokemonId) {
     </table>`;
 }
 
+
+// Gen 1 type effectiveness chart (attacker -> {defender_type: multiplier})
+// Only types present in Gen 1: normal,fire,water,grass,electric,ice,fighting,poison,ground,flying,psychic,bug,rock,ghost,dragon
+// (steel not in Gen 1 offensively, but magnemite/magneton have it as a type - we include it defensively)
+const TYPE_CHART = {
+  normal:   {normal:1,fire:1,water:1,grass:1,electric:1,ice:1,fighting:1,poison:1,ground:1,flying:1,psychic:1,bug:1,rock:0.5,ghost:0,dragon:1,steel:0.5},
+  fire:     {normal:1,fire:0.5,water:0.5,grass:2,electric:1,ice:2,fighting:1,poison:1,ground:1,flying:1,psychic:1,bug:2,rock:0.5,ghost:1,dragon:0.5,steel:2},
+  water:    {normal:1,fire:2,water:0.5,grass:0.5,electric:1,ice:1,fighting:1,poison:1,ground:2,flying:1,psychic:1,bug:1,rock:2,ghost:1,dragon:0.5,steel:1},
+  grass:    {normal:1,fire:0.5,water:2,grass:0.5,electric:1,ice:1,fighting:1,poison:0.5,ground:2,flying:0.5,psychic:1,bug:0.5,rock:2,ghost:1,dragon:0.5,steel:0.5},
+  electric: {normal:1,fire:1,water:2,grass:0.5,electric:0.5,ice:1,fighting:1,poison:1,ground:0,flying:2,psychic:1,bug:1,rock:1,ghost:1,dragon:0.5,steel:1},
+  ice:      {normal:1,fire:0.5,water:0.5,grass:2,electric:1,ice:0.5,fighting:1,poison:1,ground:2,flying:2,psychic:1,bug:1,rock:1,ghost:1,dragon:2,steel:0.5},
+  fighting: {normal:2,fire:1,water:1,grass:1,electric:1,ice:2,fighting:1,poison:0.5,ground:1,flying:0.5,psychic:0.5,bug:0.5,rock:2,ghost:0,dragon:1,steel:2},
+  poison:   {normal:1,fire:1,water:1,grass:2,electric:1,ice:1,fighting:1,poison:0.5,ground:0.5,flying:1,psychic:1,bug:2,rock:0.5,ghost:0.5,dragon:1,steel:0},
+  ground:   {normal:1,fire:2,water:1,grass:0.5,electric:2,ice:1,fighting:1,poison:2,ground:1,flying:0,psychic:1,bug:0.5,rock:2,ghost:1,dragon:1,steel:2},
+  flying:   {normal:1,fire:1,water:1,grass:2,electric:0.5,ice:1,fighting:2,poison:1,ground:1,flying:1,psychic:1,bug:2,rock:0.5,ghost:1,dragon:1,steel:0.5},
+  psychic:  {normal:1,fire:1,water:1,grass:1,electric:1,ice:1,fighting:2,poison:2,ground:1,flying:1,psychic:0.5,bug:1,rock:1,ghost:0,dragon:1,steel:0.5},
+  bug:      {normal:1,fire:0.5,water:1,grass:2,electric:1,ice:1,fighting:0.5,poison:0.5,ground:1,flying:0.5,psychic:2,bug:1,rock:1,ghost:0.5,dragon:1,steel:0.5},
+  rock:     {normal:1,fire:2,water:1,grass:1,electric:1,ice:2,fighting:0.5,poison:1,ground:0.5,flying:2,psychic:1,bug:2,rock:1,ghost:1,dragon:1,steel:0.5},
+  ghost:    {normal:0,fire:1,water:1,grass:1,electric:1,ice:1,fighting:1,poison:1,ground:1,flying:1,psychic:0,bug:1,rock:1,ghost:2,dragon:1,steel:0.5},
+  dragon:   {normal:1,fire:1,water:1,grass:1,electric:1,ice:1,fighting:1,poison:1,ground:1,flying:1,psychic:1,bug:1,rock:1,ghost:1,dragon:2,steel:0.5},
+  steel:    {normal:1,fire:0.5,water:0.5,grass:1,electric:1,ice:2,fighting:1,poison:1,ground:1,flying:1,psychic:1,bug:1,rock:2,ghost:1,dragon:0.5,steel:0.5}
+};
+
+const typeColors2 = typeColors; // alias
+
+// Given a pokemon's type array, compute combined defensive effectiveness for each attacking type
+// Returns {immune:[types], quarter:[types], half:[types], neutral:[types], double:[types], quad:[types]}
+function getDefensiveChart(types) {
+    const allTypes = Object.keys(TYPE_CHART);
+    const result = {quad:[], double:[], half:[], quarter:[], immune:[]};
+    allTypes.forEach(attacker => {
+        let mult = 1;
+        types.forEach(defType => {
+            const row = TYPE_CHART[attacker];
+            if(row && row[defType] !== undefined) mult *= row[defType];
+        });
+        if(mult === 0) result.immune.push(attacker);
+        else if(mult <= 0.25) result.quarter.push(attacker);
+        else if(mult <= 0.5) result.half.push(attacker);
+        else if(mult >= 4) result.quad.push(attacker);
+        else if(mult >= 2) result.double.push(attacker);
+        // neutral: skip
+    });
+    return result;
+}
+
+// Given a pokemon's type array, compute offensive effectiveness (what this mon hits for 2x/0.5x/0x)
+function getOffensiveChart(types) {
+    const allTargetTypes = Object.keys(TYPE_CHART);
+    // For each of this mon's types, compute what it hits
+    const superEff = new Set(), notVery = new Set(), immune = new Set();
+    types.forEach(atkType => {
+        const row = TYPE_CHART[atkType];
+        if(!row) return;
+        allTargetTypes.forEach(def => {
+            const m = row[def];
+            if(m === 0) immune.add(def);
+            else if(m >= 2) superEff.add(def);
+            else if(m <= 0.5) notVery.add(def);
+        });
+    });
+    return {superEff:[...superEff], notVery:[...notVery], immune:[...immune]};
+}
+
+function buildTypeChartHTML(p) {
+    const def = getDefensiveChart(p.types);
+    const off = getOffensiveChart(p.types);
+
+    function pills(types, mult) {
+        return types.map(t => `<span class="tc-pill" style="background:${typeColors[t]||'#888'}">${t}<span class="tc-mult">${mult}</span></span>`).join('');
+    }
+
+    let html = '<div class="typechart-wrap">';
+
+    // Defensive
+    html += '<div class="tc-section-head">Defense (taking damage)</div>';
+    if(def.immune.length)  html += `<div class="typechart-label">Immune ×0</div><div class="typechart-row">${pills(def.immune,'×0')}</div>`;
+    if(def.quarter.length) html += `<div class="typechart-label">Resists ×0.25</div><div class="typechart-row">${pills(def.quarter,'×¼')}</div>`;
+    if(def.half.length)    html += `<div class="typechart-label">Resists ×0.5</div><div class="typechart-row">${pills(def.half,'×½')}</div>`;
+    if(def.double.length)  html += `<div class="typechart-label">Weak ×2</div><div class="typechart-row">${pills(def.double,'×2')}</div>`;
+    if(def.quad.length)    html += `<div class="typechart-label">Weak ×4</div><div class="typechart-row">${pills(def.quad,'×4')}</div>`;
+
+    // Offensive
+    html += '<div class="tc-section-head">Offense (dealing damage)</div>';
+    if(off.superEff.length) html += `<div class="typechart-label">Super effective ×2</div><div class="typechart-row">${pills(off.superEff,'×2')}</div>`;
+    if(off.notVery.length)  html += `<div class="typechart-label">Not very effective ×0.5</div><div class="typechart-row">${pills(off.notVery,'×½')}</div>`;
+    if(off.immune.length)   html += `<div class="typechart-label">No effect ×0</div><div class="typechart-row">${pills(off.immune,'×0')}</div>`;
+
+    html += '</div>';
+    return html;
+}
+
 // STATE
 let activeSorts=[],activeFilters=[],filterLogic='OR';
-let displayToggles={stats:true,evo:true,moves:true};
+let displayToggles={stats:true,evo:true,moves:true,typechart:true};
 let teams=[],teamIdCounter=0,selectingSlot=null;
 
 function toggleDisplay(section) {
@@ -696,8 +803,10 @@ function createCardHTML(p,clickable=true){
     const sH=displayToggles.stats?'':' hidden';
     const eH=displayToggles.evo?'':' hidden';
     const mH=displayToggles.moves?'':' hidden';
+    const tcH=displayToggles.typechart?'':' hidden';
     const evoHTML=buildEvoChainHTML(p.id);
     const movesHTML=buildMovesHTML(p.id);
+    const typeChartHTML=buildTypeChartHTML(p);
     const click=clickable?`onclick="handleCardClick(this,${p.id})"`:'';
     const isFR=frExclusive.has(p.id),isLG=lgExclusive.has(p.id);
     const verClass=isFR?' fr-exclusive':isLG?' lg-exclusive':'';
@@ -712,6 +821,7 @@ function createCardHTML(p,clickable=true){
         <div class="section-stats${sH}"><div class="stats-box">${statsHTML}</div><div class="card-total">TOTAL: ${p.total}</div></div>
         ${evoHTML?`<div class="section-evo${eH}">${evoHTML}</div>`:''}
         ${movesHTML?`<div class="section-moves${mH}">${movesHTML}</div>`:''}
+        ${typeChartHTML?`<div class="section-typechart${tcH}">${typeChartHTML}</div>`:''}
     </div>`;
 }
 
