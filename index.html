@@ -316,9 +316,9 @@
     <div class="filter-row">
         <strong>Show:</strong>
         <button class="btn-display active" id="toggle-stats" onclick="toggleDisplay('stats')">&#128202; Stats</button>
+        <button class="btn-display active" id="toggle-typechart" onclick="toggleDisplay('typechart')">&#128737; Type Defenses</button>
         <button class="btn-display active" id="toggle-evo" onclick="toggleDisplay('evo')">&#128260; Evolution</button>
         <button class="btn-display active" id="toggle-moves" onclick="toggleDisplay('moves')">&#129354; Moves</button>
-        <button class="btn-display active" id="toggle-typechart" onclick="toggleDisplay('typechart')">&#9889; Type Chart</button>
     </div>
 </div>
 <div id="main-list"></div>
@@ -831,28 +831,17 @@ function getOffensiveChart(types) {
 
 function buildTypeChartHTML(p) {
     const def = getDefensiveChart(p.types);
-    const off = getOffensiveChart(p.types);
 
     function pills(types, mult) {
         return types.map(t => `<span class="tc-pill" style="background:${typeColors[t]||'#888'}">${t}<span class="tc-mult">${mult}</span></span>`).join('');
     }
 
     let html = '<div class="typechart-wrap">';
-
-    // Defensive
-    html += '<div class="tc-section-head">Defense (taking damage)</div>';
-    if(def.immune.length)  html += `<div class="typechart-label">Immune ×0</div><div class="typechart-row">${pills(def.immune,'×0')}</div>`;
-    if(def.quarter.length) html += `<div class="typechart-label">Resists ×0.25</div><div class="typechart-row">${pills(def.quarter,'×¼')}</div>`;
-    if(def.half.length)    html += `<div class="typechart-label">Resists ×0.5</div><div class="typechart-row">${pills(def.half,'×½')}</div>`;
+    if(def.immune.length)  html += `<div class="typechart-label">Immune</div><div class="typechart-row">${pills(def.immune,'×0')}</div>`;
+    if(def.quarter.length) html += `<div class="typechart-label">Resists ×¼</div><div class="typechart-row">${pills(def.quarter,'×¼')}</div>`;
+    if(def.half.length)    html += `<div class="typechart-label">Resists ×½</div><div class="typechart-row">${pills(def.half,'×½')}</div>`;
     if(def.double.length)  html += `<div class="typechart-label">Weak ×2</div><div class="typechart-row">${pills(def.double,'×2')}</div>`;
     if(def.quad.length)    html += `<div class="typechart-label">Weak ×4</div><div class="typechart-row">${pills(def.quad,'×4')}</div>`;
-
-    // Offensive
-    html += '<div class="tc-section-head">Offense (dealing damage)</div>';
-    if(off.superEff.length) html += `<div class="typechart-label">Super effective ×2</div><div class="typechart-row">${pills(off.superEff,'×2')}</div>`;
-    if(off.notVery.length)  html += `<div class="typechart-label">Not very effective ×0.5</div><div class="typechart-row">${pills(off.notVery,'×½')}</div>`;
-    if(off.immune.length)   html += `<div class="typechart-label">No effect ×0</div><div class="typechart-row">${pills(off.immune,'×0')}</div>`;
-
     html += '</div>';
     return html;
 }
@@ -876,10 +865,10 @@ function initDrawerShowRow() {
     const row = document.getElementById('drawer-show-row');
     if(!row) return;
     const showDefs = [
-        {section:'stats', label:'&#128202; Stats'},
-        {section:'evo',   label:'&#128260; Evo'},
-        {section:'moves', label:'&#129354; Moves'},
-        {section:'typechart', label:'&#9889; Types'}
+        {section:'stats',     label:'&#128202; Stats'},
+        {section:'typechart', label:'&#128737; Type Def'},
+        {section:'evo',       label:'&#128260; Evo'},
+        {section:'moves',     label:'&#129354; Moves'}
     ];
     showDefs.forEach(d => {
         const b = document.createElement('button');
@@ -995,9 +984,9 @@ function createCardHTML(p,clickable=true){
         <div class="card-header"><span class="card-name">${p.name}</span>
         <div class="type-box">${p.types.map(t=>`<span class="type-pill" style="background:${typeColors[t]}">${t}</span>`).join('')}</div></div>
         <div class="section-stats${sH}"><div class="stats-box">${statsHTML}</div><div class="card-total">TOTAL: ${p.total}</div></div>
+        ${typeChartHTML?`<div class="section-typechart${tcH}">${typeChartHTML}</div>`:''}
         ${evoHTML?`<div class="section-evo${eH}">${evoHTML}</div>`:''}
         ${movesHTML?`<div class="section-moves${mH}">${movesHTML}</div>`:''}
-        ${typeChartHTML?`<div class="section-typechart${tcH}">${typeChartHTML}</div>`:''}
     </div>`;
 }
 
