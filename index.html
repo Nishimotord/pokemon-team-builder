@@ -21,7 +21,7 @@
     /* ── BOTTOM SHEET (desktop default) ── */
     .team-drawer {
         position: fixed; left: 0; right: 0; bottom: -100%;
-        max-height: 55vh; min-height: 220px;
+        max-height: 65vh; min-height: 220px;
         background: var(--bg); z-index: 201;
         transition: bottom 0.35s cubic-bezier(.4,0,.2,1);
         display: flex; flex-direction: column;
@@ -32,12 +32,19 @@
 
     /* Header bar with pokeball + title + show toggles + close */
     .drawer-header {
-        display: flex; align-items: center; gap: 10px;
-        padding: 10px 14px; border-bottom: 2px solid var(--border);
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-bottom: 2px solid var(--border);
         background: var(--pk-blue); color: white; flex-shrink: 0;
         border-radius: 16px 16px 0 0;
-        flex-wrap: wrap;
     }
+    /* Show row spans full width on second row when needed */
+    .drawer-header-left { grid-column: 1; display: flex; align-items: center; gap: 6px; }
+    .drawer-show-row { grid-column: 2; display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; align-items: center; }
+    .drawer-close-btn-wrap { grid-column: 3; }
     .drawer-header-left { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
     .drawer-header-left h2 { margin: 0; font-size: 0.95rem; white-space: nowrap; }
     .drawer-pokeball { width: 22px; height: 22px; image-rendering: pixelated; vertical-align: middle; }
@@ -76,9 +83,9 @@
     .team-slots::-webkit-scrollbar { height: 3px; }
     .team-slots::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-    /* Each slot is a fixed-width mini card column */
+    /* Each slot grows to fill available width equally */
     .slot {
-        flex: 0 0 160px; /* fixed width, no grow/shrink */
+        flex: 1 1 0; min-width: 120px; max-width: 220px;
         background: rgba(0,0,0,0.05); border: 2px dashed var(--border);
         border-radius: 8px; display: flex; align-items: flex-start; justify-content: center;
         cursor: pointer; position: relative; overflow: visible;
@@ -89,27 +96,40 @@
     .slot.empty-slot::after { content: "+"; font-size: 1.8rem; opacity: 0.2; pointer-events: none; }
     .slot.empty-slot:hover { border-color: var(--pk-blue); background: rgba(59,76,202,0.08); }
 
-    /* Cards inside slots inherit full width and lose outer border */
+    /* Cards inside slots: fill slot, scaled down */
     .slot .card {
-        width: 100%; margin: 0; border: none !important; box-shadow: none !important;
-        border-radius: 6px; cursor: default; padding: 6px;
-        font-size: 0.8em; /* scale text slightly */
+        width: 100%; margin: 0;
+        border: 1px solid var(--border) !important;
+        border-radius: 6px; cursor: default; padding: 5px;
     }
     .slot .card:active { transform: none; }
-    .slot .card img { width: 56px; height: 56px; }
-    .slot .card .card-name { font-size: 0.78rem; }
-    .slot .card .type-pill { font-size: 0.55rem; padding: 2px 6px; }
-    .slot .card .stat-label { width: 24px; font-size: 0.62rem; }
-    .slot .card .stats-box { font-size: 0.62rem; padding: 5px; }
-    .slot .card .card-total { font-size: 0.68rem; }
-    .slot .card .evo-node img { width: 30px; height: 30px; }
-    .slot .card .evo-name { font-size: 0.48rem; max-width: 36px; }
-    .slot .card .evo-num { font-size: 0.4rem; }
-    .slot .card .evo-arrow-label { font-size: 0.4rem; }
-    .slot .card .moves-table { font-size: 0.58rem; }
-    .slot .card .tc-pill { font-size: 0.5rem; padding: 1px 4px; }
-    .slot .card .typechart-label { font-size: 0.5rem; }
-    .slot .card .tc-section-head { font-size: 0.5rem; }
+    /* Proportional scale — sprite and text shrink together */
+    .slot .card img { width: 52px; height: 52px; }
+    .slot .card .id-badge { font-size: 0.6rem; }
+    .slot .card .card-name { font-size: 0.72rem; }
+    .slot .card .type-pill { font-size: 0.5rem; padding: 2px 5px; }
+    .slot .card .stats-box { font-size: 0.6rem; padding: 4px 5px; gap: 2px; }
+    .slot .card .stat-label { width: 22px; }
+    .slot .card .stat-bar-bg { height: 5px; }
+    .slot .card .card-total { font-size: 0.62rem; margin-top: 4px; }
+    /* Evo chain: smaller sprites, text still legible */
+    .slot .card .evo-node img { width: 28px; height: 28px; }
+    .slot .card .evo-name { font-size: 0.46rem; max-width: 34px; }
+    .slot .card .evo-num { font-size: 0.38rem; }
+    .slot .card .evo-arrow { font-size: 0.75rem; padding: 0 1px; }
+    .slot .card .evo-arrow-label { font-size: 0.38rem; max-width: 30px; }
+    /* Moves: compact */
+    .slot .card .moves-table { font-size: 0.55rem; }
+    .slot .card .moves-table th { padding: 2px 4px; font-size: 0.5rem; }
+    .slot .card .moves-table td { padding: 1px 4px; }
+    /* Type chart */
+    .slot .card .tc-pill { font-size: 0.48rem; padding: 1px 3px; gap: 2px; }
+    .slot .card .typechart-label { font-size: 0.48rem; }
+    .slot .card .tc-section-head { font-size: 0.46rem; }
+    .slot .card .typechart-row { gap: 2px; margin-bottom: 2px; }
+
+    /* Filled slot resets */
+    .slot.slot-filled { border: none; background: none; cursor: default; padding: 0; overflow: visible; min-height: auto; align-items: flex-start; }
 
     /* Remove btn stays top-right */
     .slot-remove-btn {
@@ -133,22 +153,29 @@
     .fab-pokeball { width: 20px; height: 20px; image-rendering: pixelated; }
     .fab-badge { background: var(--pk-red); color: white; border-radius: 10px; padding: 1px 7px; font-size: 0.7rem; min-width: 20px; text-align: center; }
 
-    /* ── MOBILE: right-side drawer ── */
-    @media (max-width: 768px) {
+    /* ── TABLET/MOBILE: right-side drawer (≤1024px) ── */
+    @media (max-width: 1024px) {
         .team-drawer {
-            top: 0; bottom: unset; left: unset; right: -100%; width: min(340px, 100vw);
+            top: 0; bottom: unset; left: unset; right: -100%; width: min(520px, 100vw);
             max-height: 100vh; height: 100%;
             border-radius: 0; transition: right 0.35s cubic-bezier(.4,0,.2,1);
             box-shadow: -4px 0 24px rgba(0,0,0,0.35);
         }
         .team-drawer.open { bottom: unset; right: 0; }
         .drawer-header { border-radius: 0; }
-        /* Mobile slots stack vertically, fixed width to fit drawer */
-        .team-slots { flex-direction: column; overflow-x: hidden; overflow-y: visible; }
-        .slot { flex: none; width: 100%; min-height: 80px; }
+        /* Tablet/mobile: 2-column grid per team row */
+        .team-slots {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            overflow-x: hidden; overflow-y: visible;
+        }
+        .slot { flex: none; width: 100%; min-height: 80px; max-width: none; }
         .slot.empty-slot { min-height: 70px; }
-        .slot .card { font-size: 1em; }
-        .slot .card img { width: 64px; height: 64px; }
+        /* Restore slightly larger text/sprite in wider right drawer */
+        .slot .card img { width: 56px; height: 56px; }
+        .slot .card .card-name { font-size: 0.78rem; }
+        .slot .card .stats-box { font-size: 0.63rem; }
     }
     .controls { background: var(--card-bg); padding: 12px; border-radius: 12px; margin-bottom: 12px; position: sticky; top: 0; z-index: 100; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     .filter-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
@@ -261,7 +288,7 @@
         <div class="drawer-show-row" id="drawer-show-row">
             <!-- populated by JS to mirror the Show buttons -->
         </div>
-        <button class="drawer-close-btn" onclick="closeDrawer()">&#10005;</button>
+        <div class="drawer-close-btn-wrap"><button class="drawer-close-btn" onclick="closeDrawer()">&#10005;</button></div>
     </div>
     <div class="drawer-body" id="teams-list"></div>
     <div class="drawer-footer">
@@ -891,7 +918,7 @@ function renderTeams(){
         team.slots.forEach((pid,si)=>{
             if(pid!==null){
                 const p=pokemonData.find(x=>x.id===pid);
-                sh+=`<div class="slot" style="border:none;background:none;cursor:default;padding:0;overflow:visible;min-height:auto">
+                sh+=`<div class="slot slot-filled">
                     <button class="slot-remove-btn" onclick="removeFromSlot(${team.id},${si},event)">&#215;</button>
                     ${createCardHTML(p,false)}
                 </div>`;
@@ -907,8 +934,20 @@ function renderTeams(){
     });
 }
 
-function openDrawer(){document.getElementById('team-drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('open');}
-function closeDrawer(){document.getElementById('team-drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');}
+function openDrawer(){
+    document.getElementById('team-drawer').classList.add('open');
+    document.getElementById('drawer-overlay').classList.add('open');
+    // On desktop (bottom sheet), push main content up so it's not hidden behind panel
+    if(window.innerWidth > 1024) {
+        const h = document.getElementById('team-drawer').offsetHeight;
+        document.getElementById('main-list').style.paddingBottom = (h + 90) + 'px';
+    }
+}
+function closeDrawer(){
+    document.getElementById('team-drawer').classList.remove('open');
+    document.getElementById('drawer-overlay').classList.remove('open');
+    document.getElementById('main-list').style.paddingBottom = '';
+}
 
 function handleCardClick(el,pid){
     if(selectingSlot){addToSlot(selectingSlot.teamId,selectingSlot.slotIndex,pid);cancelSelectingSlot();openDrawer();return;}
@@ -980,6 +1019,7 @@ function init(){
         const b=document.createElement('button');b.className='btn-sort';b.dataset.stat=s;b.innerText=s.toUpperCase();b.onclick=()=>handleSort(s);sc.appendChild(b);
     });
     addTeamRow();render();
+    initDrawerShowRow();
 }
 init();
 
